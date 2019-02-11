@@ -1,4 +1,13 @@
 #chart {
   width: 80%; }
 
+svg text {
+  pointer-events: none; }
+
+#filter-metal {
+  cursor: pointer; }
+
+g#styles {
+  pointer-events: all; }
+
 /*# sourceMappingURL=styles.css.map */
