@@ -4,6 +4,9 @@
 svg text {
   pointer-events: none; }
 
+#metal {
+  display: block; }
+
 #filter-metal {
   cursor: pointer; }
 
