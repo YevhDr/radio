@@ -1,3 +1,7 @@
+#titles_group {
+  display: flex;
+  justify-content: space-around; }
+
 #chart {
   width: 80%; }
 
