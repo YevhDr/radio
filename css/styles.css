@@ -8,6 +8,8 @@ body {
   font-family: 'Roboto', sans-serif; }
 
 button {
+  font-weight: 400;
+  letter-spacing: 1px;
   cursor: pointer;
   padding: 5px;
   margin-right: 20px;
