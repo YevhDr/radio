@@ -286,7 +286,8 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("data-tippy-content", function (d) {
             return "Назва групи: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>"+
-                   "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
+                   "Стиль: <b>" + d.style + "</b><br>"+
+                   "Самоідентифікація: <b>" + d.Selfdetermination + "</b><br>"+
                    "Місто:  <b>" + d.City + "</b><br>"
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })

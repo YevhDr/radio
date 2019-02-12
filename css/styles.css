@@ -18,7 +18,7 @@ button {
   color: #e1e1e1; }
 
 button.active {
-  background-color: rgba(225, 225, 225, 0.1);
+  background-color: rgba(225, 225, 225, 0.2);
   border: 2px solid #e1e1e1;
   color: #e1e1e1; }
 
