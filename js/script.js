@@ -75,7 +75,7 @@
 //         .attr("cx", function(d, i){ return 175 + 25 * i + 2 * i * 2; })
 //         .attr("cy", function(d, i){ return 250; })
 //         .style("fill", function(d, i){ return color(d.style); })
-//         .style("stroke", "none")
+//         .style("stroke", function(d, i){ return color(d.style); })
 //         .style("stroke-width", 10)
 //         .style("pointer-events", "all")
 //         .on("click", function(d) {
@@ -201,8 +201,16 @@
 // });
 //
 
+var sexTypes = {
+    'чоловіча': 1,
+    'мікс': 2,
+    'жіноча': 3,
+    'інше': 4
+};
+
 
 d3.csv('data/radio.csv', function (error, data) {
+
 
     var width = window.innerWidth * 0.9, height = window.innerHeight* 0.9;
     // var fill = d3.scale.ordinal()
@@ -228,16 +236,36 @@ d3.csv('data/radio.csv', function (error, data) {
         centers = _.uniq(_.pluck(data, vname)).map(function (d) {
             return { name: d, value: 1};
         });
-        console.log(centers);
+
         var plusone = { name: "", value: 1};
+
         if(centers.length & 1){
             centers.push(plusone)
         }
 
-        console.log(centers);
+        // centers.sort(function(a,b){
+        //     return d3.descending(b.name, a.name)
+        // });
 
-        centers.sort(function(a,b){
-            return d3.descending(b.name, a.name)
+        var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
+        var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
+        var regionOrder = [ "", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
+        var languageOrder = [ "", "дивна", "немає", "російська","англійська", "українська"];
+
+
+        centers = _.sortBy(centers, function(obj){
+            debugger;
+            if(sexOrder.includes(obj.name)){
+                return _.indexOf(sexOrder, obj.name);
+            } if(languageOrder.includes(obj.name)){
+                return _.indexOf(languageOrder, obj.name);
+            } if(regionOrder.includes(obj.name)){
+                return _.indexOf(regionOrder, obj.name);
+            }
+            if(styleOrder.includes(obj.name)){
+                return _.indexOf(styleOrder, obj.name);
+            }
+
         });
 
         map = d3.layout.treemap()
@@ -257,14 +285,23 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r", 6 )
-        .style("fill", function (d) { return fill(d.style); });
+        .attr("r", 3 )
+        // .style("fill", function (d) { return fill(d.style); })
+        .style("fill", function(d, i){ return "black"; })
+        .style("stroke", function(d, i){ return fill(d.style); })
+        .style("stroke-width", 4)
+        .attr("data-tippy-content", function (d) {
+            return "Назва групи: <b>" + d.group + "</b><br>" +
+                   "Альбом: <b>" + d.album + "</b><br>"+
+                   "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
+                   "Місто:  <b>" + d.City + "</b><br>"
+        });
         // .on("mouseover", function (d) { showPopover.call(this, d); })
         // .on("mouseout", function (d) { removePopovers(); })
 
     var force = d3.layout.force();
 
-    draw('region');
+    draw('style');
 
     $( "button" ).click(function() {
         draw(this.id);
@@ -303,31 +340,16 @@ d3.csv('data/radio.csv', function (error, data) {
             .attr("class", "label")
             .text(function (d) { return d.name })
             .attr("transform", function (d) {
-                console.log(d)
                 return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
             })
-            .style("text-transform", "uppercase");
+            // .style("text-transform", "uppercase")
+        ;
     }
 
-    // function removePopovers () {
-    //     $('.popover').each(function() {
-    //         $(this).remove();
-    //     });
-    // }
-    //
-    // function showPopover (d) {
-    //     $(this).popover({
-    //         placement: 'auto top',
-    //         container: 'body',
-    //         trigger: 'manual',
-    //         html : true,
-    //         content: function() {
-    //             return "Make: " + d.make + "<br/>Model: " + d.model +
-    //                 "<br/>Trans: " + d.trans + "<br/>MPG: " + d.comb;
-    //         }
-    //     });
-    //     $(this).popover('show')
-    // }
+
+    tippy(".node", {
+        allowHTML:true
+    });
 
     function collide(alpha) {
         var quadtree = d3.geom.quadtree(data);

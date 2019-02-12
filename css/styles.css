@@ -5,6 +5,9 @@ body {
   background-color: #181818;
   color: white; }
 
+#toolbar {
+  margin-bottom: 50px; }
+
 #titles_group {
   display: flex;
   justify-content: space-between; }
