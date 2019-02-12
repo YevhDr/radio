@@ -287,7 +287,7 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("cy", function (d) { return d.y; })
         .attr("r", 5 )
         // .style("fill", function (d) { return fill(d.style); })
-        .style("fill", function(d, i){ return "black"; })
+        .style("fill", function(d, i){ return "#181818"; })
         .style("stroke", function(d, i){ return fill(d.style); })
         .style("stroke-width", 4)
         .attr("data-tippy-content", function (d) {
