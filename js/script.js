@@ -297,7 +297,7 @@ d3.csv('data/radio.csv', function (error, data) {
                    "Місто:  <b>" + d.City + "</b><br>"
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
-        .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
+        .on("mouseout", function (d) { d3.select(this).attr("r", 5)  });
 
 
             var force = d3.layout.force();
