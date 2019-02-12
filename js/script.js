@@ -210,8 +210,6 @@ d3.csv('data/radio.csv', function (error, data) {
         .range(['#f0595a','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
         .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
-    // var fill = d3.scale.category20();
-
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
         .attr("height", height);
@@ -231,16 +229,18 @@ d3.csv('data/radio.csv', function (error, data) {
             return { name: d, value: 1};
         });
 
-        var plusone = { name: "", value: 1};
 
+
+        //якщо непарна кількість кластерів, додаємо пустий, щоб вирівняти грід
+        var plusone = { name: "", value: 1};
         if(centers.length & 1){
+
             centers.push(plusone)
         }
 
-        // centers.sort(function(a,b){
-        //     return d3.descending(b.name, a.name)
-        // });
 
+
+        //сортуємо по заданим параметрам.... здається не працює
         var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
         var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
         var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
@@ -248,7 +248,6 @@ d3.csv('data/radio.csv', function (error, data) {
 
 
         centers = _.sortBy(centers, function(obj){
-
             if(sexOrder.includes(obj.name)){
                 return _.indexOf(sexOrder, obj.name);
             } if(languageOrder.includes(obj.name)){
@@ -279,11 +278,11 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r", 5 )
+        .attr("r",4)
         // .style("fill", function (d) { return fill(d.style); })
         .style("fill", function(d, i){ return "#181818"; })
         .style("stroke", function(d, i){ return fill(d.style); })
-        .style("stroke-width", 5)
+        .style("stroke-width", 4)
         .attr("data-tippy-content", function (d) {
             return "Назва групи: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>"+
@@ -291,7 +290,7 @@ d3.csv('data/radio.csv', function (error, data) {
                    "Місто:  <b>" + d.City + "</b><br>"
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
-        .on("mouseout", function (d) { d3.select(this).attr("r", 5)  });
+        .on("mouseout", function (d) { d3.select(this).attr("r", 6)  });
 
 
             var force = d3.layout.force();
@@ -321,7 +320,7 @@ d3.csv('data/radio.csv', function (error, data) {
                 o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
-            nodes.each(collide(0.2))
+            nodes.each(collide(0.3))
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
