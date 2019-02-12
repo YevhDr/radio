@@ -290,7 +290,7 @@ d3.csv('data/radio.csv', function (error, data) {
             
             return "<div id='myTooltip>' >" +
                 "<div id='album-picture'>" +
-                "<img style='width:80px;' src='https://images.genius.com/18bec85e198cec2eea3869cfaea3ce85.600x600x1.jpg'/></div>" +
+                "<img style='width:100px;' src='"+ d.image+ "'/></div>" +
                 "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>"+
                    // "Стиль: <b>" + d.style + "</b><br>"+
@@ -370,7 +370,7 @@ d3.csv('data/radio.csv', function (error, data) {
         // trigger: "click",
         // hideOnClick: true,
         theme: 'width-200',
-        maxWidth:200
+        // maxWidth:300
     });
 
     function collide(alpha) {
