@@ -204,7 +204,7 @@
 
 d3.csv('data/radio.csv', function (error, data) {
 
-    var width = window.innerWidth * 0.9, height = window.innerHeight;
+    var width = window.innerWidth * 0.9, height = window.innerHeight* 0.9;
     // var fill = d3.scale.ordinal()
     //     .range(['#827d92','#827354','#523536','#72856a','#2a3285','#383435'])
 
@@ -215,22 +215,37 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("height", height);
 
     for (var j = 0; j < data.length; j++) {
-        data[j].radius = 8;
+        data[j].radius = 5;
         data[j].x = Math.random() * width;
         data[j].y = Math.random() * height;
     }
 
     var padding = 5;
-    var maxRadius = 8;
+    var maxRadius = 20;
 
     var getCenters = function (vname, size) {
         var centers, map;
         centers = _.uniq(_.pluck(data, vname)).map(function (d) {
-            return {name: d, value: 1};
+            return { name: d, value: 1};
+        });
+        console.log(centers);
+        var plusone = { name: "", value: 1};
+        if(centers.length & 1){
+            centers.push(plusone)
+        }
+
+        console.log(centers);
+
+        centers.sort(function(a,b){
+            return d3.descending(b.name, a.name)
         });
 
-        map = d3.layout.treemap().size(size).ratio(1/1);
-        map.nodes({children: centers});
+        map = d3.layout.treemap()
+            .size(size)
+            .ratio(4/4);
+        map.nodes({
+            children: centers
+        });
 
         return centers;
     };
@@ -242,14 +257,14 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r", 8 )
+        .attr("r", 6 )
         .style("fill", function (d) { return fill(d.style); });
         // .on("mouseover", function (d) { showPopover.call(this, d); })
         // .on("mouseout", function (d) { removePopovers(); })
 
     var force = d3.layout.force();
 
-    draw('style');
+    draw('region');
 
     $( "button" ).click(function() {
         draw(this.id);
@@ -274,7 +289,7 @@ d3.csv('data/radio.csv', function (error, data) {
                 o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
-            nodes.each(collide(0.5))
+            nodes.each(collide(0.3))
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
@@ -288,6 +303,7 @@ d3.csv('data/radio.csv', function (error, data) {
             .attr("class", "label")
             .text(function (d) { return d.name })
             .attr("transform", function (d) {
+                console.log(d)
                 return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
             })
             .style("text-transform", "uppercase");
@@ -316,7 +332,7 @@ d3.csv('data/radio.csv', function (error, data) {
     function collide(alpha) {
         var quadtree = d3.geom.quadtree(data);
         return function (d) {
-            var r = d.radius + maxRadius + padding,
+            var r = d.radius + padding,
                 nx1 = d.x - r,
                 nx2 = d.x + r,
                 ny1 = d.y - r,
