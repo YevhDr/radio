@@ -290,7 +290,7 @@ d3.csv('data/radio.csv', function (error, data) {
                    "Місто:  <b>" + d.City + "</b><br>"
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
-        .on("mouseout", function (d) { d3.select(this).attr("r", 6)  });
+        .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
 
 
             var force = d3.layout.force();
@@ -371,4 +371,10 @@ d3.csv('data/radio.csv', function (error, data) {
             });
         };
     }
+});
+
+
+$("button").on("click", function(){
+    $("button").removeClass("active");
+    $(this).addClass("active");
 });
