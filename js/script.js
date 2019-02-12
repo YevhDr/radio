@@ -249,12 +249,12 @@ d3.csv('data/radio.csv', function (error, data) {
 
         var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
         var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-        var regionOrder = [ "", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
+        var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
         var languageOrder = [ "", "дивна", "немає", "російська","англійська", "українська"];
 
 
         centers = _.sortBy(centers, function(obj){
-            debugger;
+
             if(sexOrder.includes(obj.name)){
                 return _.indexOf(sexOrder, obj.name);
             } if(languageOrder.includes(obj.name)){
@@ -270,7 +270,7 @@ d3.csv('data/radio.csv', function (error, data) {
 
         map = d3.layout.treemap()
             .size(size)
-            .ratio(4/4);
+            .ratio(1/1);
         map.nodes({
             children: centers
         });
@@ -285,7 +285,7 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r", 3 )
+        .attr("r", 5 )
         // .style("fill", function (d) { return fill(d.style); })
         .style("fill", function(d, i){ return "black"; })
         .style("stroke", function(d, i){ return fill(d.style); })
@@ -295,11 +295,12 @@ d3.csv('data/radio.csv', function (error, data) {
                    "Альбом: <b>" + d.album + "</b><br>"+
                    "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
                    "Місто:  <b>" + d.City + "</b><br>"
-        });
-        // .on("mouseover", function (d) { showPopover.call(this, d); })
-        // .on("mouseout", function (d) { removePopovers(); })
+        })
+        .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
+        .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
 
-    var force = d3.layout.force();
+
+            var force = d3.layout.force();
 
     draw('style');
 
@@ -326,7 +327,7 @@ d3.csv('data/radio.csv', function (error, data) {
                 o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
-            nodes.each(collide(0.3))
+            nodes.each(collide(0.2))
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
@@ -342,7 +343,7 @@ d3.csv('data/radio.csv', function (error, data) {
             .attr("transform", function (d) {
                 return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
             })
-            // .style("text-transform", "uppercase")
+            .style("text-transform", "uppercase")
         ;
     }
 
