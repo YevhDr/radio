@@ -214,6 +214,7 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("width", width)
         .attr("height", height);
 
+
     for (var j = 0; j < data.length; j++) {
         data[j].radius = 5;
         data[j].x = Math.random() * width;
@@ -284,11 +285,24 @@ d3.csv('data/radio.csv', function (error, data) {
         .style("stroke", function(d, i){ return fill(d.style); })
         .style("stroke-width", 4)
         .attr("data-tippy-content", function (d) {
-            return "Назва групи: <b>" + d.group + "</b><br>" +
+            
+            
+            
+            return "<div id='myTooltip>' >" +
+                "<div id='album-picture'>" +
+                "<img style='width:80px;' src='https://images.genius.com/18bec85e198cec2eea3869cfaea3ce85.600x600x1.jpg'/></div>" +
+                "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>"+
-                   "Стиль: <b>" + d.style + "</b><br>"+
-                   "Самоідентифікація: <b>" + d.Selfdetermination + "</b><br>"+
-                   "Місто:  <b>" + d.City + "</b><br>"
+                   // "Стиль: <b>" + d.style + "</b><br>"+
+                   "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
+                   "Місто:  <b>" + d.City + "</b><br> " +
+                   // "<a href='https://www.deezer.com/en/album/62151552' target='_blank'>Слухати</a>"
+                "</div>" +
+                "</div>"
+            
+            
+            
+            
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
         .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
@@ -297,6 +311,14 @@ d3.csv('data/radio.csv', function (error, data) {
             var force = d3.layout.force();
 
     draw('style');
+
+    $(window).on("resize", function(d) {
+        width = window.innerWidth * 0.9;
+        height = window.innerHeight* 0.9;
+        svg.attr("width", width).attr("height", height);
+        draw("style")
+    });
+
 
     $( "button" ).click(function() {
         draw(this.id);
@@ -343,7 +365,12 @@ d3.csv('data/radio.csv', function (error, data) {
 
 
     tippy(".node", {
-        allowHTML:true
+        allowHTML:true,
+        // interactive:true,
+        // trigger: "click",
+        // hideOnClick: true,
+        theme: 'width-200',
+        maxWidth:200
     });
 
     function collide(alpha) {
@@ -373,6 +400,7 @@ d3.csv('data/radio.csv', function (error, data) {
         };
     }
 });
+
 
 
 $("button").on("click", function(){
