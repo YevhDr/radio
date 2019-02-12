@@ -204,20 +204,24 @@
 
 d3.csv('data/radio.csv', function (error, data) {
 
-    var width = 1200, height = 500;
-    var fill = d3.scale.ordinal().range(['#827d92','#827354','#523536','#72856a','#2a3285','#383435'])
+    var width = window.innerWidth * 0.9, height = window.innerHeight;
+    // var fill = d3.scale.ordinal()
+    //     .range(['#827d92','#827354','#523536','#72856a','#2a3285','#383435'])
+
+    var fill = d3.scale.category20();
+
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
         .attr("height", height);
 
     for (var j = 0; j < data.length; j++) {
-        data[j].radius = 5;
+        data[j].radius = 8;
         data[j].x = Math.random() * width;
         data[j].y = Math.random() * height;
     }
 
-    var padding = 2;
-    var maxRadius = 10;
+    var padding = 5;
+    var maxRadius = 8;
 
     var getCenters = function (vname, size) {
         var centers, map;
@@ -238,7 +242,7 @@ d3.csv('data/radio.csv', function (error, data) {
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r", 4 )
+        .attr("r", 8 )
         .style("fill", function (d) { return fill(d.style); });
         // .on("mouseover", function (d) { showPopover.call(this, d); })
         // .on("mouseout", function (d) { removePopovers(); })
@@ -252,9 +256,9 @@ d3.csv('data/radio.csv', function (error, data) {
     });
 
     function draw (varname) {
-        var centers = getCenters(varname, [1200, 500]);
+        var centers = getCenters(varname, [width, height]);
         force.on("tick", tick(centers, varname));
-        labels(centers)
+        labels(centers);
         force.start();
     }
 
@@ -270,7 +274,7 @@ d3.csv('data/radio.csv', function (error, data) {
                 o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
-            nodes.each(collide(1))
+            nodes.each(collide(0.5))
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
@@ -284,8 +288,9 @@ d3.csv('data/radio.csv', function (error, data) {
             .attr("class", "label")
             .text(function (d) { return d.name })
             .attr("transform", function (d) {
-                return "translate(" + (d.x + (d.dx / 2)) + ", " + (d.y + 20) + ")";
-            });
+                return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
+            })
+            .style("text-transform", "uppercase");
     }
 
     // function removePopovers () {
