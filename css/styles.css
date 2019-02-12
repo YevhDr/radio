@@ -1,6 +1,9 @@
+* {
+  box-sizing: border-box; }
+
 #titles_group {
   display: flex;
-  justify-content: space-around; }
+  justify-content: space-between; }
 
 #chart {
   width: 80%; }
