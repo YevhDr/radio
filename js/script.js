@@ -201,22 +201,16 @@
 // });
 //
 
-var sexTypes = {
-    'чоловіча': 1,
-    'мікс': 2,
-    'жіноча': 3,
-    'інше': 4
-};
-
 
 d3.csv('data/radio.csv', function (error, data) {
 
 
     var width = window.innerWidth * 0.9, height = window.innerHeight* 0.9;
-    // var fill = d3.scale.ordinal()
-    //     .range(['#827d92','#827354','#523536','#72856a','#2a3285','#383435'])
+    var fill = d3.scale.ordinal()
+        .range(['#f0595a','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
+        .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
-    var fill = d3.scale.category20();
+    // var fill = d3.scale.category20();
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
@@ -289,7 +283,7 @@ d3.csv('data/radio.csv', function (error, data) {
         // .style("fill", function (d) { return fill(d.style); })
         .style("fill", function(d, i){ return "#181818"; })
         .style("stroke", function(d, i){ return fill(d.style); })
-        .style("stroke-width", 4)
+        .style("stroke-width", 5)
         .attr("data-tippy-content", function (d) {
             return "Назва групи: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>"+
