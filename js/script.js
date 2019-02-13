@@ -145,7 +145,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
 
     var force = d3.layout.force();
 
-    draw('style');
+    draw('longList');
 
 
     $(window).on("resize", function(d) {
