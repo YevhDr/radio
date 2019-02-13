@@ -133,7 +133,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
                 $("audio").get(0).play();
                 $("#playPause").attr("src", "img/pause.svg");
                 $("#playing-album").attr("src", d.image);
-                $("#playing-song").html("<i>" + d.group + " - " + d.album + "</i>");
+                $("#playing-song").html("<b>" + d.group + " </b> - " + d.album );
 
             } else {
                 // $("audio").attr("src", "sounds/valery.mp3")
