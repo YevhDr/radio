@@ -1,206 +1,23 @@
 /**
  * Created by yevheniia on 11.02.19.
  */
-// d3.xml("data/maket_color2.svg").mimeType("image/svg+xml").get(function (error, xml) {
-//     if (error) {
-//         throw error
-//     }
-//
-//     d3.select("#chart").node().appendChild(xml.documentElement);
-//
-// });
-//
-// setTimeout(function(){
-//     d3.select("#filter-metal").on("click", function(d){
-//         console.log(d);
-//
-//     var x = document.getElementById("metal");
-//         if (x.style.display === "none") {
-//             x.style.display = "block";
-//         } else {
-//             x.style.display = "none";
-//         }
-//         // d3.select("g#metal").toggle();
-//     });
-// }, 100);
 
-// console.clear();
-// var w = window.innerWidth * 0.9, h = 500;
-//
-// var radius = 6;
-// var color = d3.scaleOrdinal(d3.schemeCategory20);
-// var centerScale = d3.scalePoint().padding(1).range([50, w - 200]);
-// // var forceStrength = 0.1;
-//
-// var svg = d3.select("body").append("svg")
-//     .attr("width", w)
-//     .attr("height", h);
-//
-// var circles_group = svg.append("g")
-//     .attr("id", "circles_group")
-//     .attr("transform", "translate(100, 0)");
-//
-// var center = {x: width / 2, y: height / 2};
-// var forceStrength = 0.03;
-//
-//
-//
-// d3.csv("data/radio.csv", function(data){
-//
-//     var simulation = d3.forceSimulation()
-//         .velocityDecay(0.2)
-//         .force('x', d3.forceX().strength(forceStrength).x(center.x))
-//         .force('y', d3.forceY().strength(forceStrength).y(center.y))
-//         .force('charge', d3.forceManyBody().strength(charge))
-//         .on('tick', ticked);
-//     // .force("collide",d3.forceCollide( function(d){
-//     //     return d.r + 8 }).iterations(16)
-//     // )
-//     // .force("charge", d3.forceManyBody())
-//     // .force("y", d3.forceY().y(h / 2))
-//     // .force("x", d3.forceX().x(w / 2));
-//
-//
-//     data.forEach(function(d){
-//         d.r = radius;
-//         d.x = w / 2;
-//         d.y = h / 2;
-//     });
-//
-//     var circles = circles_group.selectAll("circle")
-//         .data(data, function(d){ return d.id ;});
-//
-//     var circlesEnter = circles.enter().append("circle")
-//         .attr("r", function(d, i){ return d.r; })
-//         .attr("cx", function(d, i){ return 175 + 25 * i + 2 * i * 2; })
-//         .attr("cy", function(d, i){ return 250; })
-//         .style("fill", function(d, i){ return color(d.style); })
-//         .style("stroke", function(d, i){ return color(d.style); })
-//         .style("stroke-width", 10)
-//         .style("pointer-events", "all")
-//         .on("click", function(d) {
-//             console.log(d.style)
-//         });
-//
-//     circles = circles.merge(circlesEnter);
-//
-//     function charge(d) {
-//         return -forceStrength * Math.pow(d.radius, 2.0);
-//     }
-//
-//     function ticked() {
-//         circles
-//             .attr("cx", function(d){ return d.x; })
-//             .attr("cy", function(d){ return d.y; });
-//     }
-//
-//     simulation
-//         .nodes(data)
-//         .on("tick", ticked);
-//
-//
-//     function groupBubbles() {
-//         hideTitles();
-//
-//         // @v4 Reset the 'x' force to draw the bubbles to the center.
-//         simulation.force('x', d3.forceX().strength(forceStrength).x(w / 3));
-//
-//         // @v4 We can reset the alpha value and restart the simulation
-//         simulation.alpha(1).restart();
-//     }
-//
-//     function splitBubbles(byVar) {
-//
-//         centerScale.domain(data.map(function(d){ return d[byVar]; }));
-//
-//         if(byVar == "all"){
-//             hideTitles()
-//         } else {
-//             showTitles(byVar, centerScale);
-//         }
-//
-//         // @v4 Reset the 'x' force to draw the bubbles to their year centers
-//         simulation.force('x', d3.forceX().strength(forceStrength).x(function(d){
-//             return centerScale(d[byVar]);
-//         }));
-//
-//         // @v4 We can reset the alpha value and restart the simulation
-//         simulation.alpha(2).restart();
-//     }
-//
-//     function hideTitles() {
-//         svg.selectAll('.title').remove();
-//     }
-//
-//     function showTitles(byVar, scale) {
-//         // Another way to do this would be to create
-//         // the year texts once and then just hide them.
-//         // var titles = titles_group.selectAll('.title')
-//         //     .data(scale.domain());
-//         //
-//         // titles.enter().append('text')
-//         //     .attr('class', 'title')
-//         //     .merge(titles)
-//         //     .attr('x', function (d) { return scale(d); })
-//         //     .attr('y', 40)
-//         //     .attr('text-anchor', 'middle')
-//         //     .text(function (d) { return ' ' + d; });
-//         //
-//         // titles.exit().remove()
-//
-//         var titles = d3.select("#titles_group")
-//             .selectAll('.title')
-//             .data(scale.domain());
-//
-//         titles.enter().append('p')
-//             .attr('class', 'title')
-//             .merge(titles)
-//             .attr('x', function (d) { return scale(d); })
-//             .attr('y', 40)
-//             .attr('text-anchor', 'middle')
-//             .text(function (d) {
-//                 console.log(d);
-//                 return ' ' + d; })
-//             .style("color", function(d){ return color(d); })
-//             ;
-//
-//
-//         titles.exit().remove()
-//
-//
-//     }
-//
-//     d3.selectAll("button").on("click", function(d){
-//         d3.select("#titles_group").remove();
-//     });
-//
-//     function setupButtons() {
-//         d3.selectAll('.button')
-//             .on('click', function () {
-//
-//                 // Remove active class from all buttons
-//                 d3.selectAll('.button').classed('active', false);
-//                 // Find the button just clicked
-//                 var button = d3.select(this);
-//
-//                 // Set it as the active button
-//                 button.classed('active', true);
-//
-//                 // Get the id of the button
-//                 var buttonId = button.attr('id');
-//
-//                 console.log(buttonId)
-//                 // Toggle the bubble chart based on
-//                 // the currently clicked button.
-//                 splitBubbles(buttonId);
-//             });
-//     }
-//
-//     setupButtons()
-//
-// });
-//
+var audio = document.getElementById("audio");
+var playPause = document.getElementById("playPause");
 
+playPause.addEventListener("click", playmusic);
+
+function playmusic() {
+    // start music
+    if (audio.paused) {
+        audio.play();
+        playPause.src = "img/pause.svg";
+    } else {
+        audio.pause();
+        playPause.src = "img/play.svg";
+
+    }
+}
 
 d3.csv('data/joinedData.csv', function (error, data) {
 
@@ -280,8 +97,13 @@ d3.csv('data/joinedData.csv', function (error, data) {
         .attr("cx", function (d) { return d.x; })
         .attr("cy", function (d) { return d.y; })
         .attr("r",4)
-        // .style("fill", function (d) { return fill(d.style); })
-        .style("fill", function(d, i){ return "#181818"; })
+        .style("fill", function(d, i){
+            if(d.longList === "Long list"){
+                return "white";
+            } else {
+                return "#181818"
+            }
+        })
         .style("stroke", function(d, i){ return fill(d.style); })
         .style("stroke-width", 4)
         .attr("data-tippy-content", function (d) {
@@ -297,11 +119,19 @@ d3.csv('data/joinedData.csv', function (error, data) {
                 "</div>" +
                 "</div>"
         })
-        .on("click", function(d) {
+        .style("cursor", function(d, i){
             if(d.longList === "Long list"){
-                $("audio").attr("src", "sounds/allOfMe.mp3")
-                $("audio").get(0).play();
+                return "pointer";
+            } else {
+                return false
+            }
+        })
+        .on("click", function(d) {
 
+            if(d.longList === "Long list"){
+                $("audio").attr("src", "sounds/allOfMe.mp3");
+                $("audio").get(0).play();
+                $("#playPause").attr("src", "img/pause.svg")
 
             } else {
                 // $("audio").attr("src", "sounds/valery.mp3")
@@ -313,9 +143,10 @@ d3.csv('data/joinedData.csv', function (error, data) {
         .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
 
 
-            var force = d3.layout.force();
+    var force = d3.layout.force();
 
     draw('style');
+
 
     $(window).on("resize", function(d) {
         width = window.innerWidth * 0.9;
