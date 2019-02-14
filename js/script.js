@@ -107,6 +107,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
         .style("stroke", function(d, i){ return fill(d.style); })
         .style("stroke-width", 4)
         .attr("data-tippy-content", function (d) {
+            var linkColor = fill(d.style);
             return "<div id='myTooltip>' >" +
                 "<div id='album-picture'>" +
                 "<img style='width:100px;' src='"+ d.image+ "'/></div>" +
@@ -115,7 +116,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
                    // "Стиль: <b>" + d.style + "</b><br>"+
                    "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
                    "Місто:  <b>" + d.City + "</b><br> " +
-                   "<a href='" + d.listen + "' target='_blank'>Перейти до альбому</a>"+
+                   "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>"+
                 "</div>" +
                 "</div>"
         })
@@ -147,7 +148,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
 
     var force = d3.layout.force();
 
-    draw('longList');
+    draw('style');
 
 
     $(window).on("resize", function(d) {
