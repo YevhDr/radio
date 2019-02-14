@@ -79,4 +79,17 @@ g#styles {
   -webkit-margin-after: 1em;
   color: #7b7b7b; }
 
+#tooltipText {
+  font-weight: 100; }
+
+#styleColorGuide {
+  position: absolute;
+  top: 20%;
+  right: 10px;
+  list-style-type: none; }
+  #styleColorGuide li {
+    margin-bottom: 10px;
+    font-size: 12px;
+    opacity: 0.8; }
+
 /*# sourceMappingURL=styles.css.map */

@@ -2,6 +2,11 @@
  * Created by yevheniia on 11.02.19.
  */
 
+var fill = d3.scale.ordinal()
+    .range(['#f0595a','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
+    .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
+
+
 var audio = document.getElementById("audio");
 var playPause = document.getElementById("playPause");
 
@@ -23,9 +28,6 @@ d3.csv('data/joinedData.csv', function (error, data) {
 
 
     var width = window.innerWidth * 0.9, height = window.innerHeight* 0.9;
-    var fill = d3.scale.ordinal()
-        .range(['#f0595a','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
-        .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
@@ -164,6 +166,11 @@ d3.csv('data/joinedData.csv', function (error, data) {
     });
 
     function draw (varname) {
+        if(varname === "style") {
+            d3.select("#styleColorGuide").style("display", "none")
+        } else {
+            d3.select("#styleColorGuide").style("display", "block")
+        }
         var centers = getCenters(varname, [width, height]);
         force.on("tick", tick(centers, varname));
         labels(centers);
@@ -247,3 +254,14 @@ $("button").on("click", function(){
     $("button").removeClass("active");
     $(this).addClass("active");
 });
+
+setTimeout(function(){
+    var svgRect = $("svg")[0].getBoundingClientRect();
+    $("#styleColorGuide ").css("top", svgRect.top);
+}, 100);
+
+
+
+
+
+
