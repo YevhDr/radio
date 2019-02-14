@@ -132,7 +132,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
         .on("click", function(d) {
 
             if(d.longList === "Long list"){
-                $("audio").attr("src", "sounds/allOfMe.mp3");
+                $("audio").attr("src", "sounds/jamala_hvili.mp3");
                 $("audio").get(0).play();
                 $("#playPause").attr("src", "img/pause.svg");
                 $("#playing-album").attr("src", d.image);
