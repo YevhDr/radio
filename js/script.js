@@ -24,6 +24,12 @@ function playmusic() {
     }
 }
 
+//сортуємо по заданим параметрам.... здається не працює
+var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
+var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
+var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
+var languageOrder = [ "", "дивна", "немає", "російська","англійська", "українська"];
+
 d3.csv('data/joinedData.csv', function (error, data) {
 
 
@@ -43,31 +49,42 @@ d3.csv('data/joinedData.csv', function (error, data) {
     var padding = 5;
     var maxRadius = 20;
 
-    var getCenters = function (vname, size) {
+    var uniqueID = [];
+
+    var dataUnique = _.uniq(data, function(group) { return group.group; });
+
+    dataUnique.forEach(function(d) {
+        uniqueID.push(d.id)
+    });
+
+    console.log(uniqueID);
+
+    var double = data.filter(function(d){
+        if(!uniqueID.includes(d.id)){
+            return d.id;
+        }
+    });
+
+    var excludeId = [];
+    double.forEach(function(d) {
+        excludeId.push(d.id)
+    });
+
+    console.log(excludeId);
+
+
+
+    var getCenters = function (vname, size, df) {
         var centers, map;
-        centers = _.uniq(_.pluck(data, vname)).map(function (d) {
+        centers = _.uniq(_.pluck(df, vname)).map(function (d) {
             return { name: d, value: 1};
         });
 
-
-
         //якщо непарна кількість кластерів, додаємо пустий, щоб вирівняти грід
         var plusone = { name: "", value: 1};
-        if(centers.length & 1){
+        if(centers.length & 1){ centers.push(plusone)  }
 
-            centers.push(plusone)
-        }
-
-
-
-        //сортуємо по заданим параметрам.... здається не працює
-        var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
-        var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-        var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-        var languageOrder = [ "", "дивна", "немає", "російська","англійська", "українська"];
-
-
-        centers = _.sortBy(centers, function(obj){
+         centers = _.sortBy(centers, function(obj){
             if(sexOrder.includes(obj.name)){
                 return _.indexOf(sexOrder, obj.name);
             } if(languageOrder.includes(obj.name)){
@@ -81,13 +98,8 @@ d3.csv('data/joinedData.csv', function (error, data) {
 
         });
 
-        map = d3.layout.treemap()
-            .size(size)
-            .ratio(1/1);
-        map.nodes({
-            children: centers
-        });
-
+        map = d3.layout.treemap().size(size).ratio(1/1);
+        map.nodes({ children: centers });
         return centers;
     };
 
@@ -97,10 +109,11 @@ d3.csv('data/joinedData.csv', function (error, data) {
     nodes.enter().append("circle")
         .attr("class", "node")
         .attr("cx", function (d) { return d.x; })
+        .attr("id", function (d) { return d.id; })
         .attr("cy", function (d) { return d.y; })
         .attr("r",4)
         .style("fill", function(d, i){
-            if(d.longList === "Long list"){
+            if(d.isaudio === "yes"){
                 return "white";
             } else {
                 return "#181818"
@@ -123,7 +136,7 @@ d3.csv('data/joinedData.csv', function (error, data) {
                 "</div>"
         })
         .style("cursor", function(d, i){
-            if(d.longList === "Long list"){
+            if(d.isaudio === "yes"){
                 return "pointer";
             } else {
                 return false
@@ -131,17 +144,18 @@ d3.csv('data/joinedData.csv', function (error, data) {
         })
         .on("click", function(d) {
 
-            if(d.longList === "Long list"){
-                $("audio").attr("src", "sounds/jamala_hvili.mp3");
+            if(d.isaudio === "yes"){
+                $("audio").attr("src", function() {
+                    debugger;
+                    return "sounds/" + d.audio
+
+                });
                 $("audio").get(0).play();
                 $("#playPause").attr("src", "img/pause.svg");
                 $("#playing-album").attr("src", d.image);
                 $("#playing-song").html("<b>" + d.group + " </b> - " + d.album );
 
-            } else {
-                // $("audio").attr("src", "sounds/valery.mp3")
-                // $("audio").get(0).play();
-            }
+            } 
 
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
@@ -166,30 +180,42 @@ d3.csv('data/joinedData.csv', function (error, data) {
     });
 
     function draw (varname) {
-        if(varname === "style") {
-            d3.select("#styleColorGuide").style("display", "none")
-        } else {
-            d3.select("#styleColorGuide").style("display", "block")
+        var centers;
+        if(varname === "region") {
+            centers = getCenters(varname, [width, height], data);
+            force.on("tick", tick(centers, varname, data));
+            labels(centers);
+            force.start();
+            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
         }
-        var centers = getCenters(varname, [width, height]);
-        force.on("tick", tick(centers, varname));
-        labels(centers);
-        force.start();
+        else {
+            if(varname === "style") {
+                d3.select("#styleColorGuide").style("display", "none")
+            } else {
+                d3.select("#styleColorGuide").style("display", "block")
+            }
+
+            centers = getCenters(varname, [width, height], dataUnique);
+            force.on("tick", tick(centers, varname, dataUnique));
+            labels(centers);
+            force.start();
+            excludeId.forEach(function(id){ $("#"+id).css("display", "none"); });
+        }
     }
 
-    function tick (centers, varname) {
+    function tick (centers, varname, df) {
         var foci = {};
         for (var i = 0; i < centers.length; i++) {
             foci[centers[i].name] = centers[i];
         }
         return function (e) {
-            for (var i = 0; i < data.length; i++) {
-                var o = data[i];
+            for (var i = 0; i < df.length; i++) {
+                var o = df[i];
                 var f = foci[o[varname]];
                 o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
-            nodes.each(collide(0.3))
+            nodes.each(collide(0.3, df))
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
@@ -220,8 +246,8 @@ d3.csv('data/joinedData.csv', function (error, data) {
         // maxWidth:300
     });
 
-    function collide(alpha) {
-        var quadtree = d3.geom.quadtree(data);
+    function collide(alpha, df) {
+        var quadtree = d3.geom.quadtree(df);
         return function (d) {
             var r = d.radius + padding,
                 nx1 = d.x - r,
@@ -246,6 +272,11 @@ d3.csv('data/joinedData.csv', function (error, data) {
             });
         };
     }
+
+    excludeId.forEach(function(id){
+        debugger;
+        $("#"+id).css("display", "none");
+    });
 });
 
 
