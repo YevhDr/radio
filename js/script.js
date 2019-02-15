@@ -171,7 +171,8 @@ d3.csv('data/joinedData.csv', function (error, data) {
         width = window.innerWidth * 0.9;
         height = window.innerHeight* 0.9;
         svg.attr("width", width).attr("height", height);
-        draw("style")
+        var activeLi = $("button.active").attr('id');
+        draw(activeLi)
     });
 
 
@@ -274,7 +275,6 @@ d3.csv('data/joinedData.csv', function (error, data) {
     }
 
     excludeId.forEach(function(id){
-        debugger;
         $("#"+id).css("display", "none");
     });
 });
