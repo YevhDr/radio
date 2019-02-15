@@ -85,6 +85,7 @@ g#styles {
   font-weight: 100; }
 
 #styleColorGuide {
+  display: none;
   position: absolute;
   top: 20%;
   right: 10px;
