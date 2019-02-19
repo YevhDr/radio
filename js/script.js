@@ -9,8 +9,11 @@ var fill = d3.scale.ordinal()
 
 var audio = document.getElementById("audio");
 var playPause = document.getElementById("playPause");
+var playPauseMob = document.getElementById("playPause-mob");
+
 
 playPause.addEventListener("click", playmusic);
+playPauseMob.addEventListener("click", playmusicmob);
 
 function playmusic() {
     // start music
@@ -20,6 +23,18 @@ function playmusic() {
     } else {
         audio.pause();
         playPause.src = "img/play.svg";
+
+    }
+}
+
+function playmusicmob() {
+    // start music
+    if (audio.paused) {
+        audio.play();
+        playPauseMob.src = "img/pause.svg";
+    } else {
+        audio.pause();
+        playPauseMob.src = "img/play.svg";
 
     }
 }
@@ -144,18 +159,24 @@ d3.csv('data/joinedData.csv', function (error, data) {
         })
         .on("click", function(d) {
 
-            if(d.isaudio === "yes"){
-                $("audio").attr("src", function() {
-                    debugger;
-                    return "sounds/" + d.audio
+                if (d.isaudio === "yes") {
+                    $("audio").attr("src", function () {
+                        return "sounds/" + d.audio
 
-                });
-                $("audio").get(0).play();
-                $("#playPause").attr("src", "img/pause.svg");
-                $("#playing-album").attr("src", d.image);
-                $("#playing-song").html("<b>" + d.group + " </b> - " + d.album );
+                    });
+                    $("audio").get(0).play();
+                    if (window.innerWidth > 800) {
+                        $("#playPause").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
+                    } else {
+                        $("#playPause-mob").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                    }
+                }
 
-            } 
+
 
         })
         .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })

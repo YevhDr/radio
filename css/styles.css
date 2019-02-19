@@ -58,7 +58,7 @@ svg text {
 g#styles {
   pointer-events: all; }
 
-#playPause {
+#playPause, #playPause-mob {
   -webkit-margin-before: 0.2em;
   -webkit-margin-after: 1em;
   z-index: 10000;
@@ -74,8 +74,27 @@ g#styles {
   right: 10px;
   display: grid;
   grid-template-columns: max-content 60px; }
+  @media (max-width: 800px) {
+    #playing-now {
+      display: none; } }
+
+#playing-now-mob {
+  width: max-content;
+  margin: -30px auto 0 auto;
+  text-align: center;
+  display: grid;
+  grid-template-columns: max-content 60px; }
+  @media (min-width: 801px) {
+    #playing-now-mob {
+      display: none; } }
 
 #playing-song {
+  font-size: 13px;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  color: #7b7b7b; }
+
+#playing-song-mob {
   font-size: 13px;
   -webkit-margin-before: 1em;
   -webkit-margin-after: 1em;
