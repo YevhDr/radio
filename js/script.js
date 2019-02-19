@@ -48,7 +48,7 @@ var languageOrder = [ "", "дивна", "немає", "російська","ан
 d3.csv('data/joinedData.csv', function (error, data) {
 
 
-    var width = window.innerWidth * 0.9, height = window.innerHeight* 0.9;
+    var width = window.innerWidth * 0.8, height = window.innerHeight* 0.9;
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
