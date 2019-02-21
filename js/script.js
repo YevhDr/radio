@@ -3,7 +3,7 @@
  */
 
 var fill = d3.scale.ordinal()
-    .range(['#f0595a','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
+    .range(['#b20000','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
     .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
 
@@ -43,9 +43,9 @@ function playmusicmob() {
 var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
 var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-var languageOrder = [ "", "дивна", "немає", "російська","англійська", "українська"];
+var languageOrder = [ "", "дивна", "немає", "особлива лірика", "російська","англійська", "українська"];
 
-d3.csv('data/joinedData.csv', function (error, data) {
+d3.csv('data/joinedDataAll.csv', function (error, data) {
 
 
     var width = window.innerWidth * 0.8, height = window.innerHeight* 0.9;
@@ -179,8 +179,21 @@ d3.csv('data/joinedData.csv', function (error, data) {
 
 
         })
-        .on("mouseover", function (d) { d3.select(this).attr("r", 8)    })
-        .on("mouseout", function (d) { d3.select(this).attr("r", 4)  });
+        .on("mouseover", function (d) {
+            console.log(d);
+            d3.select(this).attr("r", 8);
+            $( "li.list").css( "text-decoration", "none" );
+            var theStyle = d.style;
+            theStyle = capitalize(theStyle);
+            $( "li.list:contains("+ theStyle + ")" ).css( "text-decoration", "underline" );
+
+
+
+        })
+        .on("mouseout", function (d) {
+            d3.select(this).attr("r", 4)
+            $( "li.list").css( "text-decoration", "none" );
+        });
 
 
     var force = d3.layout.force();
@@ -209,6 +222,14 @@ d3.csv('data/joinedData.csv', function (error, data) {
             labels(centers);
             force.start();
             excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
+        }
+        if(varname === "aprize") {
+            centers = getCenters(varname, [width, height], data);
+            force.on("tick", tick(centers, varname, data));
+            labels(centers);
+            force.start();
+            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
+            d3.select("#styleColorGuide").style("display", "block")
         }
         else {
             if(varname === "style") {
@@ -262,10 +283,8 @@ d3.csv('data/joinedData.csv', function (error, data) {
         allowHTML:true,
         animateFill: false,
         interactive:true,
-        // trigger: "click",
         hideOnClick: true,
         theme: 'width-200'
-        // maxWidth:300
     });
 
     function collide(alpha, df) {
@@ -313,7 +332,10 @@ setTimeout(function(){
 }, 100);
 
 
-
+function capitalize(s)
+{
+    return s[0].toUpperCase() + s.slice(1);
+}
 
 
 
