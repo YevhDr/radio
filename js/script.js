@@ -381,10 +381,10 @@ $("button").on("click", function(){
     $(this).addClass("active");
 });
 
-setTimeout(function(){
-    var svgRect = $("svg")[0].getBoundingClientRect();
-    $("#styleColorGuide ").css("top", svgRect.top + 20);
-}, 100);
+// setTimeout(function(){
+//     var svgRect = $("svg")[0].getBoundingClientRect();
+//     $("#styleColorGuide ").css("top", svgRect.top + 20);
+// }, 100);
 
 
 function capitalize(s)

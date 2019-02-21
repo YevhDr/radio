@@ -6,8 +6,30 @@ body {
   margin: 0;
   padding: 0;
   background-color: #181818;
-  color: white;
+  color: #d5d5d5;
   font-family: 'Roboto', sans-serif; }
+
+#header {
+  height: max-content; }
+  #header img {
+    width: 100%;
+    height: auto; }
+
+.textContent {
+  line-height: 1.8;
+  width: 52%;
+  margin: 100px auto; }
+  .textContent p, .textContent li {
+    font-size: 22px; }
+  .textContent li {
+    margin-bottom: 10px; }
+  .textContent h3 {
+    font-size: 25px; }
+  .textContent h2 {
+    margin-top: 50px; }
+
+#graphics {
+  position: relative; }
 
 a {
   text-decoration: none;
@@ -113,7 +135,7 @@ g#styles {
 #styleColorGuide {
   opacity: 0;
   position: absolute;
-  top: 20%;
+  top: 0;
   right: 10%;
   list-style-type: none; }
   @media (max-width: 1000px) {
