@@ -3,7 +3,7 @@
  */
 
 var fill = d3.scale.ordinal()
-    .range(['#b20000','yellow','#8c5754','#c3c3c3','#0977f6','#fcc980','#adeda6','#db656b','#4cb69c','#d372d9','#53a424','#a26fdc'])
+    .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
     .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
 
@@ -15,8 +15,8 @@ var playPauseMob = document.getElementById("playPause-mob");
 playPause.addEventListener("click", playmusic);
 playPauseMob.addEventListener("click", playmusicmob);
 
+
 function playmusic() {
-    // start music
     if (audio.paused) {
         audio.play();
         playPause.src = "img/pause.svg";
@@ -28,37 +28,34 @@ function playmusic() {
 }
 
 function playmusicmob() {
-    // start music
     if (audio.paused) {
         audio.play();
         playPauseMob.src = "img/pause.svg";
     } else {
         audio.pause();
         playPauseMob.src = "img/play.svg";
-
     }
 }
 
 //сортуємо по заданим параметрам.... здається не працює
-var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
+var sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
 var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-var languageOrder = [ "", "дивна", "немає", "специфічна", "російська","англійська", "українська"];
+var regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
+var languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
 
 d3.csv('data/joinedDataAll.csv', function (error, data) {
     var width;
-    if(window.innerWidth > 700) {
+    if (window.innerWidth > 700) {
         width = window.innerWidth * 0.8;
     } else {
         width = window.innerWidth * 0.9;
     }
 
-
     var height;
-    if(window.innerWidth > 700) {
-        height = window.innerHeight* 0.9;
+    if (window.innerWidth > 700) {
+        height = window.innerHeight * 0.9;
     } else {
-        height = window.innerHeight* 1.4;
+        height = window.innerHeight * 1.4;
     }
 
     var svg = d3.select("#chart").append("svg")
@@ -72,7 +69,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     }
 
     var padding;
-    if(window.innerWidth > 700) {
+    if (window.innerWidth > 700) {
         padding = 12
     } else {
         padding = 4
@@ -81,103 +78,107 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     var maxRadius = 20;
 
 
-    // танці з бубном навколо даних
-
-    //пустий  ветор для уныкальних айді
-    var uniqueID = [];
-
-    //залишаємо унікальні рядки по альбомам
-    var dataUnique = _.uniq(data, function(group) { return group.album; });
-
-    //створюємо список унікальних айдішників
-    dataUnique.forEach(function(d) {
-        uniqueID.push(d.id)
+    //залишаємо унікальні рядки по альбомам для вкладок стиль, мова, стать
+    var dataUnique = _.uniq(data, function (group) {
+        return group.album;
     });
 
-    //створюємо dataset з дублями, тобто тими айдішками, який не зустрічається в списку інкальних
-    var double = data.filter(function(d){
-        if(!uniqueID.includes(d.id)){
-            return d.id;
-        }
-    });
 
-    //створюємо вектор з айдішниками, які треба виключити на основі датасету з дублями
+    //Знаходимо усі існуючі дублікати (щортлист, лонглист, регіони)
+    var ids1 = {};
     var excludeId = [];
 
-    double.forEach(function(d) {
-        excludeId.push(d.id)
-    });
-
- 
-    //фільтруємо по категорії "Усі альбоми, щоб отримати дані без повторів лонг и шорт листів
-    var allAlbumsCategory = data.filter(function(d){
-        return d.aprize === "усі альбоми"
-    })
-
-    //дістаємо з цього датасету унікальні значення, тобто виключаємо повтори регіонів
-    var uniqueValuesFromAllAlbumsCategory = _.uniq(allAlbumsCategory, function(group) { return group.album; });
-
-    //витягуємо з цих унікальних айдішники
-    var uniqueIDFromAllAlbumsCategory = [];
-
-    
-    uniqueValuesFromAllAlbumsCategory.forEach(function(d) {
-        uniqueIDFromAllAlbumsCategory.push(d.id)
-    });
-
-
-    //знаходимо дублі, маючи список інкальних
-    var doublesFromAllAlbums = allAlbumsCategory.filter(function(d){
-        if(!uniqueIDFromAllAlbumsCategory.includes(d.id)){
-            return d.id;
+    data.forEach(function (val) {
+        if (ids1[val.album]) {
+            excludeId.push(val.id)
+        } else {
+            ids1[val.album] = true;
         }
+        return excludeId;
     });
 
-    //створюємо вектор з неунікальними
-    var IDofDoublesFromAllAlbums = []
 
-    doublesFromAllAlbums.forEach(function(d) {
-        IDofDoublesFromAllAlbums.push(d.id)
+    //фільтруємо по категорії "Усі альбоми", щоб виключити з кластер "Усі альбоми" повтори за регіоном
+    var allAlbumsCategory = data.filter(function (d) {
+        return d.aprize === "усі альбоми"
     });
 
-    var dataForAprizeWithoutRegions = data.filter(function(d) {
-        if(!IDofDoublesFromAllAlbums.includes(d.id)){
+    //знаходимо перелік id зі строк, що дублюються
+    var ids2 = {};
+    var dub2 = [];
+
+    allAlbumsCategory.forEach(function (val) {
+        if (ids2[val.album]) {
+            dub2.push(val.id)
+        } else {
+            ids2[val.album] = true;
+        }
+        return dub2;
+    });
+
+
+    //фільтруємо так само по лонг лісту
+    var lingListAlbumsCategory = data.filter(function (d) {
+        return d.aprize === "long list"
+    });
+
+    var ids3 = {};
+    var dub3 = [];
+
+    lingListAlbumsCategory.forEach(function (val) {
+        if (ids3[val.album]) {
+            dub3.push(val.id)
+        } else {
+            ids3[val.album] = true;
+        }
+        return dub3;
+    });
+
+    //поєднуємо обидва виключення
+    var IDofDoublesFromAllAlbums = dub2.concat(dub3);
+
+
+
+    //  фільтруємо дані для вкладки "айпраз"
+    var dataForAprizeWithoutRegions = data.filter(function (d) {
+        if (!IDofDoublesFromAllAlbums.includes(d.id)) {
             return d;
         }
-    })
+    });
+
 
     //-------------------------------------------------------------
-    
+
     var getCenters = function (vname, size, df) {
         var centers, map;
         centers = _.uniq(_.pluck(df, vname)).map(function (d) {
-            return { name: d, value: 1};
+            return {name: d, value: 1};
         });
 
         //якщо непарна кількість кластерів, додаємо пустий, щоб вирівняти грід
-        var plusone = { name: "", value: 1};
-        if(centers.length & 1){ centers.push(plusone)  }
+        var plusone = {name: "", value: 1};
+        if (centers.length & 1) {
+            centers.push(plusone)
+        }
 
-        // while(centers.length != 12){
-        //     centers.push(plusone)
-        // }
-
-         centers = _.sortBy(centers, function(obj){
-            if(sexOrder.includes(obj.name)){
+        centers = _.sortBy(centers, function (obj) {
+            if (sexOrder.includes(obj.name)) {
                 return _.indexOf(sexOrder, obj.name);
-            } if(languageOrder.includes(obj.name)){
+            }
+            if (languageOrder.includes(obj.name)) {
                 return _.indexOf(languageOrder, obj.name);
-            } if(regionOrder.includes(obj.name)){
+            }
+            if (regionOrder.includes(obj.name)) {
                 return _.indexOf(regionOrder, obj.name);
             }
-            if(styleOrder.includes(obj.name)){
+            if (styleOrder.includes(obj.name)) {
                 return _.indexOf(styleOrder, obj.name);
             }
 
         });
 
-        map = d3.layout.treemap().size(size).ratio(1/1);
-        map.nodes({ children: centers });
+        map = d3.layout.treemap().size(size).ratio(1 / 1);
+        map.nodes({children: centers});
         return centers;
     };
 
@@ -185,104 +186,102 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         .data(data);
 
 
-        nodes.enter().append("circle")
-            .attr("class", "node")
-            .attr("cx", function (d) {
-                return d.x;
-            })
-            .attr("id", function (d) {
-                return d.id;
-            })
-            .attr("cy", function (d) {
-                return d.y;
-            })
-            .attr("r", function() {
-                if(window.innerWidth > 700) {
+    nodes.enter().append("circle")
+        .attr("class", "node")
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("id", function (d) {
+            return d.id;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+        .attr("r", function () {
+            if (window.innerWidth > 700) {
+                return 6
+            } else {
+                return 3
+            }
+        })
+        .style("fill", function (d, i) {
+            if (d.isaudio === "yes") {
+                return "white";
+            } else {
+                return "#181818"
+            }
+        })
+        .style("stroke", function (d, i) {
+            return fill(d.style);
+        })
+        .style("stroke-width", function () {
+
+            if (window.innerWidth > 700) {
+                return 6
+            } else {
+                return 3
+            }
+        })
+        .attr("data-tippy-content", function (d) {
+            var linkColor = fill(d.style);
+            return "<div id='myTooltip>' >" +
+                "<div id='album-picture'>" +
+                "<img style='width:100px;' src='" + d.image + "'/></div>" +
+                "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
+                "Альбом: <b>" + d.album + "</b><br>" +
+                // "Стиль: <b>" + d.style + "</b><br>"+
+                "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
+                "Місто:  <b>" + d.City + "</b><br> " +
+                "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
+                "</div>" +
+                "</div>"
+        })
+        .style("cursor", function (d, i) {
+            if (d.isaudio === "yes") {
+                return "pointer";
+            } else {
+                return false
+            }
+        })
+        .on("click", function (d) {
+            console.log(d)
+
+            if (d.isaudio === "yes") {
+                $("audio").attr("src", function () {
+                    return "sounds/" + d.audio
+
+                });
+                $("audio").get(0).play();
+                if (window.innerWidth > 800) {
+                    $("#playPause").attr("src", "img/pause.svg");
+                    $("#playing-album").attr("src", d.image);
+                    $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
+                } else {
+                    $("#playPause-mob").attr("src", "img/pause.svg");
+                    $("#playing-album").attr("src", d.image);
+                    $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                }
+            }
+        })
+        .on("mouseover", function (d) {
+            d3.select(this).attr("r", 8);
+            $("li.list").css("text-decoration", "none");
+            var theStyle = d.style;
+            theStyle = capitalize(theStyle);
+            $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
+
+
+        })
+        .on("mouseout", function (d) {
+
+            d3.select(this).attr("r", function () {
+                if (window.innerWidth > 700) {
                     return 6
                 } else {
                     return 3
                 }
             })
-            .style("fill", function (d, i) {
-                if (d.isaudio === "yes") {
-                    return "white";
-                } else {
-                    return "#181818"
-                }
-            })
-            .style("stroke", function (d, i) {
-                return fill(d.style);
-            })
-            .style("stroke-width", function() {
-
-                if(window.innerWidth > 700) {
-                    return 6
-                } else {
-                    return 3
-                }
-            })
-            .attr("data-tippy-content", function (d) {
-                var linkColor = fill(d.style);
-                return "<div id='myTooltip>' >" +
-                    "<div id='album-picture'>" +
-                    "<img style='width:100px;' src='" + d.image + "'/></div>" +
-                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
-                    "Альбом: <b>" + d.album + "</b><br>" +
-                    // "Стиль: <b>" + d.style + "</b><br>"+
-                    "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
-                    "Місто:  <b>" + d.City + "</b><br> " +
-                    "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
-                    "</div>" +
-                    "</div>"
-            })
-            .style("cursor", function (d, i) {
-                if (d.isaudio === "yes") {
-                    return "pointer";
-                } else {
-                    return false
-                }
-            })
-            .on("click", function (d) {
-                console.log(d)
-
-                if (d.isaudio === "yes") {
-                    $("audio").attr("src", function () {
-                        return "sounds/" + d.audio
-
-                    });
-                    $("audio").get(0).play();
-                    if (window.innerWidth > 800) {
-                        $("#playPause").attr("src", "img/pause.svg");
-                        $("#playing-album").attr("src", d.image);
-                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
-                    } else {
-                        $("#playPause-mob").attr("src", "img/pause.svg");
-                        $("#playing-album").attr("src", d.image);
-                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
-                    }
-                }
-            })
-            .on("mouseover", function (d) {
-                d3.select(this).attr("r", 8);
-                $("li.list").css("text-decoration", "none");
-                var theStyle = d.style;
-                theStyle = capitalize(theStyle);
-                $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
-
-
-            })
-            .on("mouseout", function (d) {
-
-                d3.select(this).attr("r", function() {
-                    if(window.innerWidth > 700) {
-                        return 6
-                    } else {
-                        return 3
-                    }
-                })
-                // $("li.list").css("text-decoration", "none");
-            });
-
+        });
 
 
     var force = d3.layout.force();
@@ -290,36 +289,44 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     draw('style');
 
 
-    $(window).on("resize", function(d) {
+    $(window).on("resize", function (d) {
         width = window.innerWidth * 0.9;
-        height = window.innerHeight* 0.9;
+        height = window.innerHeight * 0.9;
         svg.attr("width", width).attr("height", height);
         var activeLi = $("button.active").attr('id');
         draw(activeLi)
     });
 
 
-    $( "button" ).click(function() {
+    $("button").click(function () {
         draw(this.id);
     });
 
-    function draw (varname) {
+    function draw(varname) {
         var centers;
-        if(varname === "region") {
+        if (varname === "region") {
             centers = getCenters(varname, [width, height], data);
             force.on("tick", tick(centers, varname, data));
             labels(centers);
             force.start();
-            excludeId.forEach(function(id){ $("#"+id).css("display", "none"); }); //тут в нас усі не унікальні айді, ми їх показуємо
-            IDofDoublesFromAllAlbums.forEach(function(id){ $("#"+id).css("display", "block"); }); //тут в нас повтори по регіону
+            excludeId.forEach(function (id) {
+                $("#" + id).css("display", "none");
+            }); //тут в нас усі не унікальні айді, ми їх показуємо
+            IDofDoublesFromAllAlbums.forEach(function (id) {
+                $("#" + id).css("display", "block");
+            }); //тут в нас повтори по регіону
         }
-        if(varname === "aprize") {
+        if (varname === "aprize") {
             centers = getCenters(varname, [width, height], dataForAprizeWithoutRegions);
             force.on("tick", tick(centers, varname, dataForAprizeWithoutRegions));
             labels(centers);
             force.start();
-            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); }); //тут в нас усі не унікальні айді, ми їх показуємо
-            IDofDoublesFromAllAlbums.forEach(function(id){ $("#"+id).css("display", "none"); }); //тут в нас повтори по регіону
+            excludeId.forEach(function (id) {
+                $("#" + id).css("display", "block");
+            }); //тут в нас усі не унікальні айді, ми їх показуємо
+            IDofDoublesFromAllAlbums.forEach(function (id) {
+                $("#" + id).css("display", "none");
+            }); //тут в нас повтори по регіону
             d3.select("#styleColorGuide").style("opacity", "1")
         }
         else {
@@ -333,11 +340,13 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             force.on("tick", tick(centers, varname, dataUnique));
             labels(centers);
             force.start();
-            excludeId.forEach(function (id) { $("#" + id).css("display", "none"); });
+            excludeId.forEach(function (id) {
+                $("#" + id).css("display", "none");
+            });
         }
     }
 
-    function tick (centers, varname, df) {
+    function tick(centers, varname, df) {
         var foci = {};
         for (var i = 0; i < centers.length; i++) {
             foci[centers[i].name] = centers[i];
@@ -350,20 +359,26 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
             }
             nodes.each(collide(0.3, df))
-                .attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; });
+                .attr("cx", function (d) {
+                    return d.x;
+                })
+                .attr("cy", function (d) {
+                    return d.y;
+                });
         }
     }
 
-    function labels (centers) {
+    function labels(centers) {
         svg.selectAll(".label").remove();
 
         svg.selectAll(".label")
             .data(centers).enter().append("text")
             .attr("class", "label")
-            .text(function (d) { return d.name })
+            .text(function (d) {
+                return d.name
+            })
             .attr("transform", function (d) {
-                    return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
+                return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
 
             })
             .style("text-transform", "uppercase")
@@ -372,9 +387,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
 
     tippy(".node", {
-        allowHTML:true,
+        allowHTML: true,
         animateFill: false,
-        interactive:true,
+        interactive: true,
         hideOnClick: true,
         theme: 'width-200'
     });
@@ -387,7 +402,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 nx2 = d.x + r,
                 ny1 = d.y - r,
                 ny2 = d.y + r;
-            quadtree.visit(function(quad, x1, y1, x2, y2) {
+            quadtree.visit(function (quad, x1, y1, x2, y2) {
                 if (quad.point && (quad.point !== d)) {
                     var x = d.x - quad.point.x,
                         y = d.y - quad.point.y,
@@ -406,23 +421,22 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         };
     }
 
-    excludeId.forEach(function(id){
-        $("#"+id).css("display", "none");
+    excludeId.forEach(function (id) {
+        $("#" + id).css("display", "none");
     });
 
-    IDofDoublesFromAllAlbums.forEach(function(id){
-        $("#"+id).css("display", "none");
+    IDofDoublesFromAllAlbums.forEach(function (id) {
+        $("#" + id).css("display", "none");
     });
 });
 
 
-
-$("button").on("click", function(){
+$("button").on("click", function () {
     $("button").removeClass("active");
     $(this).addClass("active");
 });
 
-setTimeout(function(){
+setTimeout(function () {
     // var svgRect = $("svg")[0].getBoundingClientRect();
     // $("#styleColorGuide ").css("top", svgRect.top + 20);
 
@@ -441,8 +455,7 @@ setTimeout(function(){
 }, 100);
 
 
-function capitalize(s)
-{
+function capitalize(s) {
     return s[0].toUpperCase() + s.slice(1);
 }
 
