@@ -48,7 +48,12 @@ var languageOrder = [ "", "дивна", "немає", "особлива ліри
 d3.csv('data/joinedDataAll.csv', function (error, data) {
 
 
-    var width = window.innerWidth * 0.8;
+    var width;
+    if(window.innerWidth > 700) {
+        width = window.innerWidth * 0.8;
+    } else {
+        width = window.innerWidth;
+    }
 
 
     var height;
@@ -229,7 +234,14 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
             })
             .on("mouseout", function (d) {
-                d3.select(this).attr("r", 4)
+
+                d3.select(this).attr("r", function() {
+                    if(window.innerWidth > 700) {
+                        return 6
+                    } else {
+                        return 3
+                    }
+                })
                 $("li.list").css("text-decoration", "none");
             });
 
