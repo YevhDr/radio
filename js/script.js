@@ -323,11 +323,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             .attr("class", "label")
             .text(function (d) { return d.name })
             .attr("transform", function (d) {
-                if(window.innerWidth > 700) {
-                    return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 60) + ")";
-                } else {
                     return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
-                }
+
             })
             .style("text-transform", "uppercase")
         ;
