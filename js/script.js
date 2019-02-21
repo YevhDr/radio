@@ -242,7 +242,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                         return 3
                     }
                 })
-                $("li.list").css("text-decoration", "none");
+                // $("li.list").css("text-decoration", "none");
             });
 
 
@@ -381,10 +381,23 @@ $("button").on("click", function(){
     $(this).addClass("active");
 });
 
-// setTimeout(function(){
-//     var svgRect = $("svg")[0].getBoundingClientRect();
-//     $("#styleColorGuide ").css("top", svgRect.top + 20);
-// }, 100);
+setTimeout(function(){
+    // var svgRect = $("svg")[0].getBoundingClientRect();
+    // $("#styleColorGuide ").css("top", svgRect.top + 20);
+
+
+    var parentPos = $('#graphics')[0].getBoundingClientRect(),
+        childrenPos = $('svg')[0].getBoundingClientRect(),
+        relativePos = {};
+
+    relativePos.top = childrenPos.top - parentPos.top,
+        relativePos.right = childrenPos.right - parentPos.right,
+        relativePos.bottom = childrenPos.bottom - parentPos.bottom,
+        relativePos.left = childrenPos.left - parentPos.left;
+
+    console.log(relativePos);
+    $("#styleColorGuide ").css("top", relativePos.top + 20);
+}, 100);
 
 
 function capitalize(s)
