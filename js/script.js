@@ -55,7 +55,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     if(window.innerWidth > 700) {
         height = window.innerHeight* 0.9;
     } else {
-        height = window.innerHeight* 1.2;
+        height = window.innerHeight* 1.4;
     }
 
 
