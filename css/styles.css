@@ -19,13 +19,22 @@ body {
   line-height: 1.8;
   width: 52%;
   margin: 100px auto; }
+  @media (max-width: 700px) {
+    .textContent {
+      width: 90%; } }
   .textContent p, .textContent li {
     font-size: 20px; }
+    @media (max-width: 700px) {
+      .textContent p, .textContent li {
+        font-size: 14px; } }
   .textContent li {
     margin-bottom: 10px; }
   .textContent h3 {
     font-size: 22px;
     margin-bottom: 60px; }
+    @media (max-width: 700px) {
+      .textContent h3 {
+        font-size: 18px; } }
   .textContent h2 {
     margin-top: 50px; }
 
