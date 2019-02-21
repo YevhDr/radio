@@ -62,10 +62,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     }
 
     var padding;
-    if(window.innerWidth > 800) {
+    if(window.innerWidth > 700) {
         padding = 12
     } else {
-        padding = 7
+        padding = 6
     }
 
 
@@ -145,10 +145,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 return d.y;
             })
             .attr("r", function() {
-                if(window.innerWidth > 800) {
+                if(window.innerWidth > 700) {
                     return 6
                 } else {
-                    return 4
+                    return 3
                 }
             })
             .style("fill", function (d, i) {
@@ -163,10 +163,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             })
             .style("stroke-width", function() {
 
-                if(window.innerWidth > 800) {
+                if(window.innerWidth > 700) {
                     return 6
                 } else {
-                    return 4
+                    return 3
                 }
             })
             .attr("data-tippy-content", function (d) {
