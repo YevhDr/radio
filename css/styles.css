@@ -51,6 +51,9 @@ svg text {
   pointer-events: none;
   fill: white;
   font-weight: bold; }
+  @media (max-width: 700px) {
+    svg text {
+      font-size: 14px; } }
 
 #metal {
   display: block; }
