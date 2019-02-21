@@ -22,6 +22,9 @@ button {
   background-color: transparent;
   border: 2px solid #e1e1e1;
   color: #e1e1e1; }
+  @media (max-width: 700px) {
+    button {
+      margin-right: 10px; } }
 
 button.active {
   background-color: rgba(225, 225, 225, 0.2);
@@ -76,7 +79,7 @@ g#styles {
   grid-template-columns: -webkit-max-content 60px;
   grid-template-columns: -moz-max-content 60px;
   grid-template-columns: max-content 60px; }
-  @media (max-width: 800px) {
+  @media (max-width: 700px) {
     #playing-now {
       display: none; } }
 
@@ -90,7 +93,7 @@ g#styles {
   grid-template-columns: -webkit-max-content 60px;
   grid-template-columns: -moz-max-content 60px;
   grid-template-columns: max-content 60px; }
-  @media (min-width: 801px) {
+  @media (min-width: 701px) {
     #playing-now-mob {
       display: none; } }
 

@@ -52,7 +52,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     if(window.innerWidth > 700) {
         width = window.innerWidth * 0.8;
     } else {
-        width = window.innerWidth;
+        width = window.innerWidth * 0.9;
     }
 
 
