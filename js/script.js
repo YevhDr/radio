@@ -43,7 +43,7 @@ function playmusicmob() {
 var sexOrder = [ "інша", "жіноча", "мікс", "чоловіча"];
 var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 var regionOrder = [ "", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-var languageOrder = [ "", "дивна", "немає", "особлива лірика", "російська","англійська", "українська"];
+var languageOrder = [ "", "дивна", "немає", "специфічна", "російська","англійська", "українська"];
 
 d3.csv('data/joinedDataAll.csv', function (error, data) {
 
@@ -82,26 +82,29 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         padding = 4
     }
 
-
     var maxRadius = 20;
 
     var uniqueID = [];
 
-    var dataUnique = _.uniq(data, function(group) { return group.group; });
 
+    //залишаємо унікальні рядки по альбомам
+    var dataUnique = _.uniq(data, function(group) { return group.album; });
+
+    //створюємо список унікальних айдішників
     dataUnique.forEach(function(d) {
         uniqueID.push(d.id)
     });
 
-    console.log(uniqueID);
-
+    //створюємо дф з дублями
     var double = data.filter(function(d){
         if(!uniqueID.includes(d.id)){
             return d.id;
         }
     });
 
+    //створюємо вектор з айдішниками, які треба виключити
     var excludeId = [];
+
     double.forEach(function(d) {
         excludeId.push(d.id)
     });
@@ -109,6 +112,48 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     console.log(excludeId);
 
 
+    var allAlbumsCategory = data.filter(function(d){
+        return d.aprize === "усі альбоми"
+    })
+
+
+    var uniqueValuesFromAllAlbumsCategory = _.uniq(allAlbumsCategory, function(group) { return group.album; });
+
+    var uniqueIDFromAllAlbumsCategory = [];
+
+    uniqueValuesFromAllAlbumsCategory.forEach(function(d) {
+        uniqueIDFromAllAlbumsCategory.push(d.id)
+    });
+
+
+
+    var doublesFromAllAlbums = allAlbumsCategory.filter(function(d){
+        if(!uniqueIDFromAllAlbumsCategory.includes(d.id)){
+            return d.id;
+        }
+    });
+
+
+    var IDofDoublesFromAllAlbums = []
+
+    doublesFromAllAlbums.forEach(function(d) {
+        IDofDoublesFromAllAlbums.push(d.id)
+    });
+
+    console.log(IDofDoublesFromAllAlbums);
+
+
+    var dataForAprizeWithoutRegions = data.filter(function(d) {
+        if(!IDofDoublesFromAllAlbums.includes(d.id)){
+            return d;
+        }
+    })
+
+
+
+    console.log(data.length);
+    console.log(dataUnique.length);
+    console.log(dataForAprizeWithoutRegions.length);
 
     var getCenters = function (vname, size, df) {
         var centers, map;
@@ -205,6 +250,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 }
             })
             .on("click", function (d) {
+                console.log(d)
 
                 if (d.isaudio === "yes") {
                     $("audio").attr("src", function () {
@@ -224,7 +270,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 }
             })
             .on("mouseover", function (d) {
-                console.log(d);
                 d3.select(this).attr("r", 8);
                 $("li.list").css("text-decoration", "none");
                 var theStyle = d.style;
@@ -272,18 +317,20 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             force.on("tick", tick(centers, varname, data));
             labels(centers);
             force.start();
-            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
+            excludeId.forEach(function(id){ $("#"+id).css("display", "none"); }); //тут в нас усі не унікальні айді, ми їх показуємо
+            IDofDoublesFromAllAlbums.forEach(function(id){ $("#"+id).css("display", "block"); }); //тут в нас повтори по регіону
         }
         if(varname === "aprize") {
-            centers = getCenters(varname, [width, height], data);
-            force.on("tick", tick(centers, varname, data));
+            centers = getCenters(varname, [width, height], dataForAprizeWithoutRegions);
+            force.on("tick", tick(centers, varname, dataForAprizeWithoutRegions));
             labels(centers);
             force.start();
-            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
+            excludeId.forEach(function(id){ $("#"+id).css("display", "block"); }); //тут в нас усі не унікальні айді, ми їх показуємо
+            IDofDoublesFromAllAlbums.forEach(function(id){ $("#"+id).css("display", "none"); }); //тут в нас повтори по регіону
             d3.select("#styleColorGuide").style("opacity", "1")
         }
         else {
-            if(varname === "style") {
+            if (varname === "style") {
                 d3.select("#styleColorGuide").style("opacity", "0")
             } else {
                 d3.select("#styleColorGuide").style("opacity", "1")
@@ -293,7 +340,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             force.on("tick", tick(centers, varname, dataUnique));
             labels(centers);
             force.start();
-            excludeId.forEach(function(id){ $("#"+id).css("display", "none"); });
+            excludeId.forEach(function (id) { $("#" + id).css("display", "none"); });
         }
     }
 
@@ -367,6 +414,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     }
 
     excludeId.forEach(function(id){
+        $("#"+id).css("display", "none");
+    });
+
+    IDofDoublesFromAllAlbums.forEach(function(id){
         $("#"+id).css("display", "none");
     });
 });
