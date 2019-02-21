@@ -61,7 +61,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         data[j].y = Math.random() * height;
     }
 
-    var padding = 5;
+    var padding = 10;
     var maxRadius = 20;
 
     var uniqueID = [];
@@ -126,7 +126,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         .attr("cx", function (d) { return d.x; })
         .attr("id", function (d) { return d.id; })
         .attr("cy", function (d) { return d.y; })
-        .attr("r",4)
+        .attr("r", 5)
         .style("fill", function(d, i){
             if(d.isaudio === "yes"){
                 return "white";
@@ -135,7 +135,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             }
         })
         .style("stroke", function(d, i){ return fill(d.style); })
-        .style("stroke-width", 4)
+        .style("stroke-width", 5)
         .attr("data-tippy-content", function (d) {
             var linkColor = fill(d.style);
             return "<div id='myTooltip>' >" +
