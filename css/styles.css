@@ -54,7 +54,7 @@ svg text {
   font-weight: bold; }
   @media (max-width: 900px) {
     svg text {
-      font-size: 14px; } }
+      font-size: 13px; } }
 
 #metal {
   display: block; }
