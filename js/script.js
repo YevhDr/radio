@@ -79,7 +79,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     if(window.innerWidth > 700) {
         padding = 12
     } else {
-        padding = 6
+        padding = 4
     }
 
 
