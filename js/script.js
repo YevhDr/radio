@@ -268,13 +268,13 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             labels(centers);
             force.start();
             excludeId.forEach(function(id){ $("#"+id).css("display", "block"); });
-            d3.select("#styleColorGuide").style("display", "block")
+            d3.select("#styleColorGuide").style("opacity", "1")
         }
         else {
             if(varname === "style") {
-                d3.select("#styleColorGuide").style("display", "none")
+                d3.select("#styleColorGuide").style("opacity", "0")
             } else {
-                d3.select("#styleColorGuide").style("display", "block")
+                d3.select("#styleColorGuide").style("opacity", "1")
             }
 
             centers = getCenters(varname, [width, height], dataUnique);
