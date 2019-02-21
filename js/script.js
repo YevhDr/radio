@@ -61,7 +61,14 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         data[j].y = Math.random() * height;
     }
 
-    var padding = 10;
+    var padding;
+    if(window.innerWidth > 800) {
+        padding = 12
+    } else {
+        padding = 7
+    }
+
+
     var maxRadius = 20;
 
     var uniqueID = [];
@@ -99,6 +106,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         var plusone = { name: "", value: 1};
         if(centers.length & 1){ centers.push(plusone)  }
 
+        // while(centers.length != 12){
+        //     centers.push(plusone)
+        // }
+
          centers = _.sortBy(centers, function(obj){
             if(sexOrder.includes(obj.name)){
                 return _.indexOf(sexOrder, obj.name);
@@ -121,43 +132,65 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     var nodes = svg.selectAll("circle")
         .data(data);
 
-    nodes.enter().append("circle")
-        .attr("class", "node")
-        .attr("cx", function (d) { return d.x; })
-        .attr("id", function (d) { return d.id; })
-        .attr("cy", function (d) { return d.y; })
-        .attr("r", 5)
-        .style("fill", function(d, i){
-            if(d.isaudio === "yes"){
-                return "white";
-            } else {
-                return "#181818"
-            }
-        })
-        .style("stroke", function(d, i){ return fill(d.style); })
-        .style("stroke-width", 5)
-        .attr("data-tippy-content", function (d) {
-            var linkColor = fill(d.style);
-            return "<div id='myTooltip>' >" +
-                "<div id='album-picture'>" +
-                "<img style='width:100px;' src='"+ d.image+ "'/></div>" +
-                "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
-                   "Альбом: <b>" + d.album + "</b><br>"+
-                   // "Стиль: <b>" + d.style + "</b><br>"+
-                   "Стиль: <b>" + d.Selfdetermination + "</b><br>"+
-                   "Місто:  <b>" + d.City + "</b><br> " +
-                   "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>"+
-                "</div>" +
-                "</div>"
-        })
-        .style("cursor", function(d, i){
-            if(d.isaudio === "yes"){
-                return "pointer";
-            } else {
-                return false
-            }
-        })
-        .on("click", function(d) {
+
+        nodes.enter().append("circle")
+            .attr("class", "node")
+            .attr("cx", function (d) {
+                return d.x;
+            })
+            .attr("id", function (d) {
+                return d.id;
+            })
+            .attr("cy", function (d) {
+                return d.y;
+            })
+            .attr("r", function() {
+                if(window.innerWidth > 800) {
+                    return 6
+                } else {
+                    return 4
+                }
+            })
+            .style("fill", function (d, i) {
+                if (d.isaudio === "yes") {
+                    return "white";
+                } else {
+                    return "#181818"
+                }
+            })
+            .style("stroke", function (d, i) {
+                return fill(d.style);
+            })
+            .style("stroke-width", function() {
+
+                if(window.innerWidth > 800) {
+                    return 6
+                } else {
+                    return 4
+                }
+            })
+            .attr("data-tippy-content", function (d) {
+                var linkColor = fill(d.style);
+                return "<div id='myTooltip>' >" +
+                    "<div id='album-picture'>" +
+                    "<img style='width:100px;' src='" + d.image + "'/></div>" +
+                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
+                    "Альбом: <b>" + d.album + "</b><br>" +
+                    // "Стиль: <b>" + d.style + "</b><br>"+
+                    "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
+                    "Місто:  <b>" + d.City + "</b><br> " +
+                    "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
+                    "</div>" +
+                    "</div>"
+            })
+            .style("cursor", function (d, i) {
+                if (d.isaudio === "yes") {
+                    return "pointer";
+                } else {
+                    return false
+                }
+            })
+            .on("click", function (d) {
 
                 if (d.isaudio === "yes") {
                     $("audio").attr("src", function () {
@@ -175,25 +208,22 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                         $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
                     }
                 }
+            })
+            .on("mouseover", function (d) {
+                console.log(d);
+                d3.select(this).attr("r", 8);
+                $("li.list").css("text-decoration", "none");
+                var theStyle = d.style;
+                theStyle = capitalize(theStyle);
+                $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
 
 
+            })
+            .on("mouseout", function (d) {
+                d3.select(this).attr("r", 4)
+                $("li.list").css("text-decoration", "none");
+            });
 
-        })
-        .on("mouseover", function (d) {
-            console.log(d);
-            d3.select(this).attr("r", 8);
-            $( "li.list").css( "text-decoration", "none" );
-            var theStyle = d.style;
-            theStyle = capitalize(theStyle);
-            $( "li.list:contains("+ theStyle + ")" ).css( "text-decoration", "underline" );
-
-
-
-        })
-        .on("mouseout", function (d) {
-            d3.select(this).attr("r", 4)
-            $( "li.list").css( "text-decoration", "none" );
-        });
 
 
     var force = d3.layout.force();
@@ -272,7 +302,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             .attr("class", "label")
             .text(function (d) { return d.name })
             .attr("transform", function (d) {
-                return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
+                return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 60) + ")";
             })
             .style("text-transform", "uppercase")
         ;
@@ -328,7 +358,7 @@ $("button").on("click", function(){
 
 setTimeout(function(){
     var svgRect = $("svg")[0].getBoundingClientRect();
-    $("#styleColorGuide ").css("top", svgRect.top);
+    $("#styleColorGuide ").css("top", svgRect.top + 20);
 }, 100);
 
 
