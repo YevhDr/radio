@@ -46,8 +46,6 @@ var regionOrder = [ "", "інший", "Північ", "Південь", "Зак�
 var languageOrder = [ "", "дивна", "немає", "специфічна", "російська","англійська", "українська"];
 
 d3.csv('data/joinedDataAll.csv', function (error, data) {
-
-
     var width;
     if(window.innerWidth > 700) {
         width = window.innerWidth * 0.8;
@@ -63,11 +61,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         height = window.innerHeight* 1.4;
     }
 
-
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
         .attr("height", height);
-
 
     for (var j = 0; j < data.length; j++) {
         data[j].radius = 5;
@@ -84,8 +80,11 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
     var maxRadius = 20;
 
-    var uniqueID = [];
 
+    // танці з бубном навколо даних
+
+    //пустий  ветор для уныкальних айді
+    var uniqueID = [];
 
     //залишаємо унікальні рядки по альбомам
     var dataUnique = _.uniq(data, function(group) { return group.album; });
@@ -95,53 +94,51 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         uniqueID.push(d.id)
     });
 
-    //створюємо дф з дублями
+    //створюємо dataset з дублями, тобто тими айдішками, який не зустрічається в списку інкальних
     var double = data.filter(function(d){
         if(!uniqueID.includes(d.id)){
             return d.id;
         }
     });
 
-    //створюємо вектор з айдішниками, які треба виключити
+    //створюємо вектор з айдішниками, які треба виключити на основі датасету з дублями
     var excludeId = [];
 
     double.forEach(function(d) {
         excludeId.push(d.id)
     });
 
-    console.log(excludeId);
-
-
+ 
+    //фільтруємо по категорії "Усі альбоми, щоб отримати дані без повторів лонг и шорт листів
     var allAlbumsCategory = data.filter(function(d){
         return d.aprize === "усі альбоми"
     })
 
-
+    //дістаємо з цього датасету унікальні значення, тобто виключаємо повтори регіонів
     var uniqueValuesFromAllAlbumsCategory = _.uniq(allAlbumsCategory, function(group) { return group.album; });
 
+    //витягуємо з цих унікальних айдішники
     var uniqueIDFromAllAlbumsCategory = [];
 
+    
     uniqueValuesFromAllAlbumsCategory.forEach(function(d) {
         uniqueIDFromAllAlbumsCategory.push(d.id)
     });
 
 
-
+    //знаходимо дублі, маючи список інкальних
     var doublesFromAllAlbums = allAlbumsCategory.filter(function(d){
         if(!uniqueIDFromAllAlbumsCategory.includes(d.id)){
             return d.id;
         }
     });
 
-
+    //створюємо вектор з неунікальними
     var IDofDoublesFromAllAlbums = []
 
     doublesFromAllAlbums.forEach(function(d) {
         IDofDoublesFromAllAlbums.push(d.id)
     });
-
-    console.log(IDofDoublesFromAllAlbums);
-
 
     var dataForAprizeWithoutRegions = data.filter(function(d) {
         if(!IDofDoublesFromAllAlbums.includes(d.id)){
@@ -149,12 +146,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         }
     })
 
-
-
-    console.log(data.length);
-    console.log(dataUnique.length);
-    console.log(dataForAprizeWithoutRegions.length);
-
+    //-------------------------------------------------------------
+    
     var getCenters = function (vname, size, df) {
         var centers, map;
         centers = _.uniq(_.pluck(df, vname)).map(function (d) {
