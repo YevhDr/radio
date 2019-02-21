@@ -20,11 +20,11 @@ body {
   width: 52%;
   margin: 100px auto; }
   .textContent p, .textContent li {
-    font-size: 22px; }
+    font-size: 20px; }
   .textContent li {
     margin-bottom: 10px; }
   .textContent h3 {
-    font-size: 25px; }
+    font-size: 22px; }
   .textContent h2 {
     margin-top: 50px; }
 
@@ -36,6 +36,7 @@ a {
   font-weight: bold; }
 
 button {
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: 1px;
   cursor: pointer;
@@ -46,7 +47,8 @@ button {
   color: #e1e1e1; }
   @media (max-width: 700px) {
     button {
-      margin-right: 10px; } }
+      margin-right: 10px;
+      font-size: 14px; } }
 
 button.active {
   background-color: rgba(225, 225, 225, 0.2);
