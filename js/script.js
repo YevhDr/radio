@@ -75,9 +75,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         padding = 4
     }
 
-    var maxRadius = 20;
-
-
     //залишаємо унікальні рядки по альбомам для вкладок стиль, мова, стать
     var dataUnique = _.uniq(data, function (group) {
         return group.album;
@@ -98,7 +95,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     });
 
 
-    //фільтруємо по категорії "Усі альбоми", щоб виключити з кластер "Усі альбоми" повтори за регіоном
+    /* -- Фільтруємо по категорії "Усі альбоми", щоб виключити з кластеру "Усі альбоми" повтори за регіоном --*/
     var allAlbumsCategory = data.filter(function (d) {
         return d.aprize === "усі альбоми"
     });
@@ -117,7 +114,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     });
 
 
-    //фільтруємо так само по лонг лісту
+    /* -- фільтруємо так само по лонг лісту --*/
     var lingListAlbumsCategory = data.filter(function (d) {
         return d.aprize === "long list"
     });
@@ -134,7 +131,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         return dub3;
     });
 
-    //поєднуємо обидва виключення
+    
+    /*-- поєднуємо обидва виключення --*/
     var IDofDoublesFromAllAlbums = dub2.concat(dub3);
 
 
