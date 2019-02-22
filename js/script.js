@@ -2,6 +2,9 @@
  * Created by yevheniia on 11.02.19.
  */
 
+
+$("a").attr("target", "_blank");
+
 var fill = d3.scale.ordinal()
     .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
     .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);

@@ -80,7 +80,7 @@ body {
     color: #d5d5d5 !important;
     padding-bottom: 2px;
     font-style: italic;
-    border-bottom: 1px dashed #f582e9;
+    border-bottom: 1px dashed white;
     text-decoration: none;
     font-size: 20px; }
     @media (max-width: 700px) {
