@@ -58,8 +58,8 @@ svg#twitter {
 body {
   margin: 0;
   padding: 0;
-  background-color: #181818;
-  color: #d5d5d5;
+  background-color: #ededed;
+  color: #2a2a2a;
   font-family: 'Roboto', sans-serif; }
 
 #header {
@@ -77,10 +77,10 @@ body {
       width: 90%; } }
   .textContent .dashed-link {
     font-weight: 400;
-    color: #d5d5d5 !important;
+    color: #2a2a2a !important;
     padding-bottom: 2px;
     font-style: italic;
-    border-bottom: 1px dashed white;
+    border-bottom: 2px dashed #2a2a2a;
     text-decoration: none;
     font-size: 20px; }
     @media (max-width: 700px) {
@@ -88,7 +88,7 @@ body {
         font-size: 14px; } }
   .textContent .dashed-link-set-color {
     font-weight: 400;
-    color: #d5d5d5 !important;
+    color: #2a2a2a !important;
     padding-bottom: 2px;
     font-style: italic;
     text-decoration: none;
@@ -113,7 +113,31 @@ body {
     margin-top: 50px; }
 
 #graphics {
+  color: #ededed;
+  background-color: #2a2a2a;
   position: relative; }
+
+.text {
+  text-align: center;
+  width: 90%;
+  line-height: 1.8; }
+
+.text-top {
+  padding-top: 30px;
+  margin: 20px auto 50px auto; }
+
+.text-bottom {
+  padding-bottom: 30px;
+  margin: 20px auto 50px auto; }
+
+h1 {
+  font-size: 40px; }
+
+p {
+  font-size: 20px; }
+  @media (max-width: 700px) {
+    p {
+      font-size: 14px; } }
 
 a {
   text-decoration: none;
@@ -241,9 +265,9 @@ g#styles {
   width: max-content;
   margin: 100px auto 50px auto; }
   #footer h1 {
-    font-weight: 100;
     width: max-content;
     margin: auto;
+    color: #3a3a3a;
     font-size: 30px; }
   #footer img#logo {
     width: 20vw;
@@ -259,7 +283,7 @@ g#styles {
     display: flex;
     width: 70px;
     padding: 15px;
-    border: 1px solid white;
+    border: 2px solid #3a3a3a;
     border-radius: 50%;
     cursor: pointer;
     opacity: 0.5; }
