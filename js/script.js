@@ -72,11 +72,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     }
 
     var padding;
-    if (window.innerWidth > 700) {
-        padding = 12
-    } else {
-        padding = 4
-    }
+    if(window.innerWidth >= 1400 ) { padding = 12 }
+    else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 7 }
+    else { padding = 4 }
 
     //залишаємо унікальні рядки по альбомам для вкладок стиль, мова, стать
     var dataUnique = _.uniq(data, function (group) {
@@ -198,11 +196,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             return d.y;
         })
         .attr("r", function () {
-            if (window.innerWidth > 700) {
-                return 6
-            } else {
-                return 3
-            }
+            if(window.innerWidth >= 1400 ) { return 6 }
+            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+            else { return 3 }
         })
         .style("fill", function (d, i) {
             if (d.isaudio === "yes") {
@@ -215,12 +211,10 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             return fill(d.style);
         })
         .style("stroke-width", function () {
+            if(window.innerWidth >= 1400 ) { return 6 }
+            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+            else { return 3 }
 
-            if (window.innerWidth > 700) {
-                return 6
-            } else {
-                return 3
-            }
         })
         .attr("data-tippy-content", function (d) {
             var linkColor = fill(d.style);
@@ -274,11 +268,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         .on("mouseout", function (d) {
 
             d3.select(this).attr("r", function () {
-                if (window.innerWidth > 700) {
-                    return 6
-                } else {
-                    return 3
-                }
+                if(window.innerWidth >= 1400 ) { return 6 }
+                else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                else { return 3 }
             })
         });
 
