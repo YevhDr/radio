@@ -131,10 +131,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         return dub3;
     });
 
-    
+
     /*-- поєднуємо обидва виключення --*/
     var IDofDoublesFromAllAlbums = dub2.concat(dub3);
-
 
 
     //  фільтруємо дані для вкладки "айпраз"
@@ -227,7 +226,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 "<img style='width:100px;' src='" + d.image + "'/></div>" +
                 "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
                 "Альбом: <b>" + d.album + "</b><br>" +
-                // "Стиль: <b>" + d.style + "</b><br>"+
                 "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
                 "Місто:  <b>" + d.City + "</b><br> " +
                 "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
@@ -440,7 +438,7 @@ setTimeout(function () {
 
 
     var parentPos = $('#graphics')[0].getBoundingClientRect(),
-        childrenPos = $('svg')[0].getBoundingClientRect(),
+        childrenPos = $('#chart svg')[0].getBoundingClientRect(),
         relativePos = {};
 
     relativePos.top = childrenPos.top - parentPos.top,

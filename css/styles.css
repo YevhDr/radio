@@ -1,3 +1,56 @@
+#logo-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 150px auto 80px; }
+  @media (min-width: 1800px) {
+    #logo-icons {
+      grid-template-columns: 250px auto 130px; } }
+
+.logo {
+  width: 150px;
+  grid-column: 1/2; }
+  @media (min-width: 1800px) {
+    .logo {
+      width: 250px; } }
+
+.social-icons {
+  grid-column: 3/4;
+  display: grid;
+  grid-template-columns: 40px 40px;
+  position: fixed;
+  right: 5px;
+  top: 5px; }
+  @media (min-width: 1800px) {
+    .social-icons {
+      grid-template-columns: 60px 60px;
+      right: 10px;
+      top: 5px; } }
+
+.facebook {
+  width: 30px;
+  margin-right: 10px;
+  grid-column: 1/2; }
+  @media (min-width: 1800px) {
+    .facebook {
+      width: 50px; } }
+
+.twitter {
+  width: 30px;
+  grid-column: 2/3; }
+  @media (min-width: 1800px) {
+    .twitter {
+      width: 50px; } }
+
+svg#facebook {
+  z-index: 1000;
+  fill: #eeeeee; }
+
+svg#twitter {
+  z-index: 1000;
+  fill: #eeeeee; }
+
 * {
   outline: none;
   box-sizing: border-box; }
