@@ -55,6 +55,9 @@ svg#twitter {
   outline: none;
   box-sizing: border-box; }
 
+.boldtext {
+  font-weight: bold !important; }
+
 body {
   margin: 0;
   padding: 0;
