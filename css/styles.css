@@ -292,4 +292,25 @@ g#styles {
     width: 30px;
     align-self: center; }
 
+#arrow-down {
+  background-color: rgba(225, 225, 225, 0.5);
+  cursor: pointer;
+  text-align: center; }
+  @media (max-width: 800px) {
+    #arrow-down {
+      display: none; } }
+
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite; }
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0); }
+  40% {
+    transform: translateY(-30px); }
+  60% {
+    transform: translateY(-15px); } }
+
 /*# sourceMappingURL=styles.css.map */

@@ -266,7 +266,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
         })
         .on("mouseout", function (d) {
-
             d3.select(this).attr("r", function () {
                 if(window.innerWidth >= 1400 ) { return 6 }
                 else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
