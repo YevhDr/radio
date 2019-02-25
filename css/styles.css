@@ -240,6 +240,7 @@ g#styles {
   font-weight: 200; }
 
 #styleColorGuide {
+  pointer-events: none;
   opacity: 0;
   position: absolute;
   right: 10%;
