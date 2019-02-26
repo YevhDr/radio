@@ -72,7 +72,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     }
 
     var padding;
-    if(window.innerWidth >= 1400 ) { padding = 12 }
+    if(window.innerWidth >= 1400 ) { padding = 15 }
     else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 7 }
     else { padding = 4 }
 
@@ -327,22 +327,16 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     
                     //збільшуємо радіус клікнутого
                     d3.select(this).attr("r", function() {
-                        if(window.innerWidth >= 1400 ) { return 12 }
+                        if(window.innerWidth >= 1400 ) { return 14 }
                         else { return 9 }
                     });
                     
                     //починаємо грати
                     $("audio").get(0).play();
                     
-                    if (window.innerWidth > 800) {
-                        // $("#playPause").attr("src", "img/pause.svg");
                         $("#playing-album").attr("src", d.image);
-                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
-                    } else {
-                        // $("#playPause-mob").attr("src", "img/pause.svg");
-                        $("#playing-album").attr("src", d.image);
-                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
-                    }
+                        $("#playing-song").html("Ви слухаєте: <b>" + d.group + " - " + d.album + "</b> ");
+
                 }
 
 
@@ -378,7 +372,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
                 d3.select(this)
                     .attr("r", function() {
-                        if(window.innerWidth >= 1400 ) { return 12 }
+                        if(window.innerWidth >= 1400 ) { return 14 }
                         else { return 9 }
                     });
                 d3.select(this)
@@ -580,10 +574,6 @@ $("button").on("click", function () {
 });
 
 setTimeout(function () {
-    // var svgRect = $("svg")[0].getBoundingClientRect();
-    // $("#styleColorGuide ").css("top", svgRect.top + 20);
-
-
     var parentPos = $('#graphics')[0].getBoundingClientRect(),
         childrenPos = $('#chart svg')[0].getBoundingClientRect(),
         relativePos = {};
