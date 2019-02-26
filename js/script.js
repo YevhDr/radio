@@ -3,6 +3,9 @@
  */
 
 
+// var div = d3.select(".tooltip")
+//     .style("opacity", 1);
+
 $("a").attr("target", "_blank");
 
 var fill = d3.scale.ordinal()
@@ -343,6 +346,9 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             }
         })
         .on("mouseover", function (d) {
+            // div.style("display", "block")
+            //     .style("left", (d3.event.pageX) - 125 + "px")
+            //     .style("top", (d3.event.pageY) + "px");
             //обираємо усі кружечки окрім того, що клікнутий і робимо усі однаковими
             d3.selectAll(".node")
                 .filter(function() {
@@ -394,6 +400,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
         })
         .on("mouseout", function (d) {
+            div.style("display", "none");
             /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
             d3.selectAll(".node")
                 .filter(function() {
@@ -432,6 +439,18 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         svg.attr("width", width).attr("height", height);
         var activeLi = $("button.active").attr('id');
         draw(activeLi)
+        svg.selectAll(".node")
+            .attr("r", function(){
+            if(window.innerWidth >= 1400 ) { return 6 }
+            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+            else { return 3 }
+        })
+            .style("stroke-width", function() {
+                if(window.innerWidth >= 1400 ) { return 6 }
+                else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                else { return 3 }
+
+            })
     });
 
 
@@ -526,6 +545,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     tippy(".node", {
         allowHTML: true,
         animateFill: false,
+        animation: "fade",
         interactive: true,
         hideOnClick: true,
         theme: 'width-200'
