@@ -11,21 +11,21 @@ var fill = d3.scale.ordinal()
 
 
 var audio = document.getElementById("audio");
-var playPause = document.getElementById("playPause");
+// var playPause = document.getElementById("playPause");
 var playPauseMob = document.getElementById("playPause-mob");
 
 
-playPause.addEventListener("click", playmusic);
+// playPause.addEventListener("click", playmusic);
 playPauseMob.addEventListener("click", playmusicmob);
 
 
 function playmusic() {
     if (audio.paused) {
         audio.play();
-        playPause.src = "img/pause.svg";
+        // playPause.src = "img/pause.svg";
     } else {
         audio.pause();
-        playPause.src = "img/play.svg";
+        // playPause.src = "img/play.svg";
 
     }
 }
@@ -237,27 +237,95 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             }
         })
         .on("click", function (d) {
-            console.log(d)
+            if(this.classList.contains('played')){
+                audio.pause();
+                d3.select(this).style("fill", "url(#pauseimage)").style("stroke-width", '2px');
+                $(this).attr("class", "node clicked paused")
+            } else if(this.classList.contains('paused')) {
+                audio.play();
+                d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                $(this).attr("class", "node clicked played")
+            }
 
-            if (d.isaudio === "yes") {
-                $("audio").attr("src", function () {
-                    return "sounds/" + d.audio
+            else {
+                d3.selectAll(".node").attr("class", "node");
+                d3.selectAll(".node")
+                    .style("fill", function(p) {
+                        if (p.isaudio === "yes") {
+                            return "white";
+                        } else {
+                            return "#181818"
+                        }
 
-                });
-                $("audio").get(0).play();
-                if (window.innerWidth > 800) {
-                    $("#playPause").attr("src", "img/pause.svg");
-                    $("#playing-album").attr("src", d.image);
-                    $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
-                } else {
-                    $("#playPause-mob").attr("src", "img/pause.svg");
-                    $("#playing-album").attr("src", d.image);
-                    $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                    })
+                    .style("stroke-width", function() {
+                        if(window.innerWidth >= 1400 ) { return 6 }
+                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                        else { return 3 }
+
+                    })
+                    .attr("r", function () {
+                        if(window.innerWidth >= 1400 ) { return 6 }
+                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                        else { return 3 }
+                    });
+                if (d.isaudio === "yes") {
+                    d3.select(this).attr("class", "node clicked played");
+                    d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                    $("audio").attr("src", function () {
+                        return "sounds/" + d.audio
+
+                    });
+                    d3.select(this).attr("r", 12);
+                    d3.select(this)
+                        .style("fill", "url(#playimage)");
+                    $("audio").get(0).play();
+                    if (window.innerWidth > 800) {
+                        $("#playPause").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
+                    } else {
+                        $("#playPause-mob").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                    }
                 }
+
+
             }
         })
         .on("mouseover", function (d) {
-            d3.select(this).attr("r", 8);
+            d3.selectAll(".node")
+                .filter(function() {
+                    return !this.classList.contains('clicked')
+                })
+                .style("fill", function(p) {
+                    if (p.isaudio === "yes") {
+                        return "white";
+                    } else {
+                        return "#181818"
+                    }
+
+                })
+                .style("stroke-width", function() {
+                    if(window.innerWidth >= 1400 ) { return 6 }
+                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                    else { return 3 }
+
+                })
+                .attr("r", function () {
+                    if(window.innerWidth >= 1400 ) { return 6 }
+                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                    else { return 3 }
+                })
+            if (d.isaudio === "yes") {
+                d3.select(this).attr("r", 12);
+                d3.select(this)
+                    .style("fill", "url(#playimage)");
+
+                d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+            }
+
             $("li.list").css("text-decoration", "none");
             var theStyle = d.style;
             theStyle = capitalize(theStyle);
@@ -266,11 +334,29 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
         })
         .on("mouseout", function (d) {
-            d3.select(this).attr("r", function () {
-                if(window.innerWidth >= 1400 ) { return 6 }
-                else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                else { return 3 }
-            })
+            d3.selectAll(".node")
+                .filter(function() {
+                    return !this.classList.contains('clicked')
+                })
+                .style("fill", function(p) {
+                    if (p.isaudio === "yes") {
+                        return "white";
+                    } else {
+                        return "#181818"
+                    }
+
+                })
+                .style("stroke-width", function() {
+                    if(window.innerWidth >= 1400 ) { return 6 }
+                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                    else { return 3 }
+
+                })
+                .attr("r", function () {
+                    if(window.innerWidth >= 1400 ) { return 6 }
+                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+                    else { return 3 }
+                })
         });
 
 
