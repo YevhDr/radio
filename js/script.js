@@ -325,8 +325,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
                     //додаємо назву пісні поруч з кліком
                     d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album);
-                        // .style("font-size", "11px")
-                        // .style("font-weight", 400);
                     
                     //збільшуємо радіус клікнутого
                     d3.select(this).attr("r", function() {
@@ -346,10 +344,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             }
         })
         .on("mouseover", function (d) {
-            // div.style("display", "block")
-            //     .style("left", (d3.event.pageX) - 125 + "px")
-            //     .style("top", (d3.event.pageY) + "px");
-            //обираємо усі кружечки окрім того, що клікнутий і робимо усі однаковими
             d3.selectAll(".node")
                 .filter(function() {
                     return !this.classList.contains('clicked')
@@ -400,8 +394,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
         })
         .on("mouseout", function (d) {
-            div.style("display", "none");
-            /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
+           /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
             d3.selectAll(".node")
                 .filter(function() {
                     return !this.classList.contains('clicked')
