@@ -204,7 +204,7 @@ g#styles {
   width: 30px; }
 
 #playing-now {
-  text-align: right;
+  text-align: left;
   position: absolute;
   top: 10px;
   right: 11px;

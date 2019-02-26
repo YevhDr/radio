@@ -183,6 +183,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
     var nodes = svg.selectAll("circle")
         .data(data);
 
+    svg.append("text").attr("id", "playingNow");
 
     nodes.enter().append("circle")
         .attr("class", "node")
@@ -237,18 +238,36 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             }
         })
         .on("click", function (d) {
-            console.log(d3.mouse(this))
+            var clickCoordinates =  d3.mouse(this);
             //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
             if(this.classList.contains('played')){
                 audio.pause();
-                d3.select(this).style("fill", "url(#pauseimage)").style("stroke-width", '2px');
+                d3.select(this)
+                    .style("fill", function() {
+                        if(window.innerWidth >= 1400){
+                           return  "url(#playimage)"
+                        } else {
+                            return  "url(#playimage-sm)"
+                        }
+                    })
+                    .style("stroke-width", '2px');
+
                 $(this).attr("class", "node clicked paused")
             }
                 
             //якщо цей кружечок вже клікнутий і натиснута пауза:
             else if(this.classList.contains('paused')) {
                 audio.play();
-                d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                d3.select(this)
+                    .style("fill",  function() {
+                        if(window.innerWidth >= 1400){
+                            return  "url(#pauseimage-sm)"
+                        } else {
+                            return  "url(#pauseimage-sm)"
+                        }
+
+                    })
+                    .style("stroke-width", '2px');
                 $(this).attr("class", "node clicked played")
             }
                 
@@ -284,19 +303,32 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     d3.select(this).attr("class", "node clicked played");
                     
                     //міняємо фонову картинку кнопки
-                    d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                    d3.select(this)
+                        .style("fill",  function() {
+                            if(window.innerWidth >= 1400){
+                                return  "url(#pauseimage-sm)"
+                            } else {
+                                return  "url(#pauseimage-sm)"
+                            }
+
+                        })
+                        .style("stroke-width", '2px');
                     
                     //додаємо потрібне аудіо
                     $("audio").attr("src", function () {
                         return "sounds/" + d.audio
 
                     });
+
+                    //додаємо назву пісні поруч з кліком
+                    d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album);
+                        // .style("font-size", "11px")
+                        // .style("font-weight", 400);
                     
                     //збільшуємо радіус клікнутого
                     d3.select(this).attr("r", function() {
                         if(window.innerWidth >= 1400 ) { return 12 }
-                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 8 }
-                        else { return 4 }
+                        else { return 9 }
                     });
                     
                     //починаємо грати
@@ -347,14 +379,16 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 d3.select(this)
                     .attr("r", function() {
                         if(window.innerWidth >= 1400 ) { return 12 }
-                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 8 }
-                        else { return 4 }
+                        else { return 9 }
                     });
                 d3.select(this)
-                    .style("fill", "url(#playimage)");
-
-                d3.select(this)
-                    .style("fill", "url(#playimage)")
+                    .style("fill", function() {
+                        if(window.innerWidth >= 1400){
+                            return  "url(#playimage)"
+                        } else {
+                            return  "url(#playimage-sm)"
+                        }
+                    })
                     .style("stroke-width", '2px');
             }
 
