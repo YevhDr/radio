@@ -236,7 +236,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 return false
             }
         })
-        .on("click", function (d) {            
+        .on("click", function (d) {
+            console.log(d3.mouse(this))
             //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
             if(this.classList.contains('played')){
                 audio.pause();
@@ -301,22 +302,21 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     //починаємо грати
                     $("audio").get(0).play();
                     
-                    // if (window.innerWidth > 800) {
-                    //     $("#playPause").attr("src", "img/pause.svg");
-                    //     $("#playing-album").attr("src", d.image);
-                    //     $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
-                    // } else {
-                    //     $("#playPause-mob").attr("src", "img/pause.svg");
-                    //     $("#playing-album").attr("src", d.image);
-                    //     $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
-                    // }
+                    if (window.innerWidth > 800) {
+                        // $("#playPause").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
+                    } else {
+                        // $("#playPause-mob").attr("src", "img/pause.svg");
+                        $("#playing-album").attr("src", d.image);
+                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                    }
                 }
 
 
             }
         })
         .on("mouseover", function (d) {
-            
             //обираємо усі кружечки окрім того, що клікнутий і робимо усі однаковими
             d3.selectAll(".node")
                 .filter(function() {
@@ -343,7 +343,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 })
             
             //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
-            if (d.isaudio === "yes") {
+            if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
                 d3.select(this)
                     .attr("r", function() {
                         if(window.innerWidth >= 1400 ) { return 12 }
