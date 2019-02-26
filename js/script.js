@@ -261,7 +261,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 d3.select(this)
                     .style("fill",  function() {
                         if(window.innerWidth >= 1400){
-                            return  "url(#pauseimage-sm)"
+                            return  "url(#pauseimage)"
                         } else {
                             return  "url(#pauseimage-sm)"
                         }
@@ -306,7 +306,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     d3.select(this)
                         .style("fill",  function() {
                             if(window.innerWidth >= 1400){
-                                return  "url(#pauseimage-sm)"
+                                return  "url(#pauseimage)"
                             } else {
                                 return  "url(#pauseimage-sm)"
                             }
