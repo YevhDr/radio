@@ -236,19 +236,27 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 return false
             }
         })
-        .on("click", function (d) {
+        .on("click", function (d) {            
+            //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
             if(this.classList.contains('played')){
                 audio.pause();
                 d3.select(this).style("fill", "url(#pauseimage)").style("stroke-width", '2px');
                 $(this).attr("class", "node clicked paused")
-            } else if(this.classList.contains('paused')) {
+            }
+                
+            //якщо цей кружечок вже клікнутий і натиснута пауза:
+            else if(this.classList.contains('paused')) {
                 audio.play();
                 d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
                 $(this).attr("class", "node clicked played")
             }
-
+                
+            //якщо кружечок клікається вперше:
             else {
+                //прибираємо в усіх кружечков будь-які зайві класи
                 d3.selectAll(".node").attr("class", "node");
+                
+                //повертаємо усім кружечкам неактивну заливку, обводку і ширину обводки
                 d3.selectAll(".node")
                     .style("fill", function(p) {
                         if (p.isaudio === "yes") {
@@ -256,7 +264,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                         } else {
                             return "#181818"
                         }
-
                     })
                     .style("stroke-width", function() {
                         if(window.innerWidth >= 1400 ) { return 6 }
@@ -269,32 +276,48 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                         else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
                         else { return 3 }
                     });
+                
+                //якщо клікнутий має опцію програшу пісні:
                 if (d.isaudio === "yes") {
+                    //додаємо до обраного потрібні класи - "клікнутий та грає"
                     d3.select(this).attr("class", "node clicked played");
+                    
+                    //міняємо фонову картинку кнопки
                     d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                    
+                    //додаємо потрібне аудіо
                     $("audio").attr("src", function () {
                         return "sounds/" + d.audio
 
                     });
-                    d3.select(this).attr("r", 12);
-                    d3.select(this)
-                        .style("fill", "url(#playimage)");
+                    
+                    //збільшуємо радіус клікнутого
+                    d3.select(this).attr("r", function() {
+                        if(window.innerWidth >= 1400 ) { return 12 }
+                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 8 }
+                        else { return 4 }
+                    });
+                    
+                    //починаємо грати
                     $("audio").get(0).play();
-                    if (window.innerWidth > 800) {
-                        $("#playPause").attr("src", "img/pause.svg");
-                        $("#playing-album").attr("src", d.image);
-                        $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
-                    } else {
-                        $("#playPause-mob").attr("src", "img/pause.svg");
-                        $("#playing-album").attr("src", d.image);
-                        $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
-                    }
+                    
+                    // if (window.innerWidth > 800) {
+                    //     $("#playPause").attr("src", "img/pause.svg");
+                    //     $("#playing-album").attr("src", d.image);
+                    //     $("#playing-song").html("<b>" + d.group + " </b> - " + d.album);
+                    // } else {
+                    //     $("#playPause-mob").attr("src", "img/pause.svg");
+                    //     $("#playing-album").attr("src", d.image);
+                    //     $("#playing-song-mob").html("<b>" + d.group + " </b> - " + d.album);
+                    // }
                 }
 
 
             }
         })
         .on("mouseover", function (d) {
+            
+            //обираємо усі кружечки окрім того, що клікнутий і робимо усі однаковими
             d3.selectAll(".node")
                 .filter(function() {
                     return !this.classList.contains('clicked')
@@ -318,12 +341,21 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
                     else { return 3 }
                 })
+            
+            //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
             if (d.isaudio === "yes") {
-                d3.select(this).attr("r", 12);
+                d3.select(this)
+                    .attr("r", function() {
+                        if(window.innerWidth >= 1400 ) { return 12 }
+                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 8 }
+                        else { return 4 }
+                    });
                 d3.select(this)
                     .style("fill", "url(#playimage)");
 
-                d3.select(this).style("fill", "url(#playimage)").style("stroke-width", '2px');
+                d3.select(this)
+                    .style("fill", "url(#playimage)")
+                    .style("stroke-width", '2px');
             }
 
             $("li.list").css("text-decoration", "none");
@@ -334,6 +366,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
         })
         .on("mouseout", function (d) {
+            /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
             d3.selectAll(".node")
                 .filter(function() {
                     return !this.classList.contains('clicked')
