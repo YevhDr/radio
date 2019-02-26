@@ -427,8 +427,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
 
     $(window).on("resize", function (d) {
-        width = window.innerWidth * 0.9;
-        height = window.innerHeight * 0.9;
+        width = screen.width * 0.9;
+        height = screen.height * 0.9;
         svg.attr("width", width).attr("height", height);
         var activeLi = $("button.active").attr('id');
         draw(activeLi)
