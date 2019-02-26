@@ -207,11 +207,7 @@ g#styles {
   text-align: left;
   position: absolute;
   top: 10px;
-  right: 11px;
-  display: grid;
-  grid-template-columns: -webkit-max-content 60px;
-  grid-template-columns: -moz-max-content 60px;
-  grid-template-columns: max-content 60px; }
+  right: 11px; }
   @media (max-width: 700px) {
     #playing-now {
       display: none; } }
@@ -221,11 +217,7 @@ g#styles {
   width: -moz-max-content;
   width: max-content;
   margin: -30px auto 0 auto;
-  text-align: center;
-  display: grid;
-  grid-template-columns: -webkit-max-content 60px;
-  grid-template-columns: -moz-max-content 60px;
-  grid-template-columns: max-content 60px; }
+  text-align: center; }
   @media (min-width: 701px) {
     #playing-now-mob {
       display: none; } }

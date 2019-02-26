@@ -12,33 +12,33 @@ var fill = d3.scale.ordinal()
 
 var audio = document.getElementById("audio");
 // var playPause = document.getElementById("playPause");
-var playPauseMob = document.getElementById("playPause-mob");
+// var playPauseMob = document.getElementById("playPause-mob");
 
 
 // playPause.addEventListener("click", playmusic);
-playPauseMob.addEventListener("click", playmusicmob);
+// playPauseMob.addEventListener("click", playmusicmob);
 
-
-function playmusic() {
-    if (audio.paused) {
-        audio.play();
-        // playPause.src = "img/pause.svg";
-    } else {
-        audio.pause();
-        // playPause.src = "img/play.svg";
-
-    }
-}
-
-function playmusicmob() {
-    if (audio.paused) {
-        audio.play();
-        playPauseMob.src = "img/pause.svg";
-    } else {
-        audio.pause();
-        playPauseMob.src = "img/play.svg";
-    }
-}
+//
+// function playmusic() {
+//     if (audio.paused) {
+//         audio.play();
+//         // playPause.src = "img/pause.svg";
+//     } else {
+//         audio.pause();
+//         // playPause.src = "img/play.svg";
+//
+//     }
+// }
+//
+// function playmusicmob() {
+//     if (audio.paused) {
+//         audio.play();
+//         playPauseMob.src = "img/pause.svg";
+//     } else {
+//         audio.pause();
+//         playPauseMob.src = "img/play.svg";
+//     }
+// }
 
 //сортуємо по заданим параметрам.... здається не працює
 var sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
