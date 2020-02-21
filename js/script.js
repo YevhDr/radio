@@ -2,59 +2,57 @@
  * Created by yevheniia on 11.02.19.
  */
 
-
 $("a").attr("target", "_blank");
 
 var fill = d3.scale.ordinal()
     .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
     .domain(["rock", "r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic"]);
 
-
 var audio = document.getElementById("audio");
-
 
 //сортуємо по заданим параметрам.... здається не працює
 var sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
 var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 var regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
 var languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
+var r = 6;
+
+// d3.csv('data/joinedDataAll.csv', function (error, data) {
+d3.csv('data/random_18_19.csv', function (error, data) {
+
+    data = data.filter(function(d) {
+        return d.year === "2018"
+    });
+
+    /* легенда по стилях */
+    var styles = d3.map(data, function(d){return d.style;}).keys();
+    console.log(styles);
+
+    d3.select("#styleColorGuide")
+        .selectAll("li")
+        .data(styles)
+        .enter()
+        .append("li")
+        .text(function(d) { return d })
+        .style("color", function(d) { return fill(d) });
 
 
-
-
-d3.csv('data/joinedDataAll.csv', function (error, data) {
     var width;
-    if (window.innerWidth > 700) {
-        width = window.innerWidth * 0.8;
-    } else {
-        width = window.innerWidth * 0.9;
-    }
-
     var height;
-    if (window.innerWidth > 700) {
-        height = window.innerHeight * 0.9;
-    } else {
-        height = window.innerHeight * 1.4;
-    }
+    var padding;
+
+    if (window.innerWidth > 700) { width = window.innerWidth * 0.8; } else { width = window.innerWidth * 0.9; }
+    if (window.innerWidth > 700) { height = window.innerHeight * 0.9; } else {  height = window.innerHeight * 1.4; }
+    if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 4 } else { padding = 4 }
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", width)
         .attr("height", height);
 
-
     for (var j = 0; j < data.length; j++) {
         data[j].radius = 5;
         data[j].x = Math.random() * width;
         data[j].y = Math.random() * height;
-    }
-
-    var padding;
-    if(window.innerWidth >= 1400 ) {
-        padding = 15
-    } else if(window.innerWidth < 1400 && window.innerWidth > 700) {
-        padding = 4
-    } else {
-        padding = 4
     }
 
     //залишаємо унікальні рядки по альбомам для вкладок стиль, мова, стать
@@ -91,7 +89,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
     allAlbumsCategory.forEach(function (val) {
         if (ids2[val.album]) {
-            dub2.push(val.id)
+            dub2.push(val.id);
             dataForRegions.push(val)
 
         } else {
@@ -111,7 +109,7 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
     lingListAlbumsCategory.forEach(function (val) {
         if (ids3[val.album]) {
-            dub3.push(val.id)
+            dub3.push(val.id);
             dataForRegions.push(val)
         } else {
             ids3[val.album] = true;
@@ -167,49 +165,30 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         return centers;
     };
 
-    var nodes = svg.selectAll("circle")
-        .data(data);
 
     svg.append("text").attr("id", "playingNow");
+
+    var nodes = svg.selectAll("circle")
+        .data(data);
 
 
     var previousClickedValue;
 
     nodes.enter().append("circle")
         .attr("class", "node")
-        .attr("value", function(d) {
-            return  d.style
-        })
-        .attr("cx", function (d) {
-            return d.x;
-        })
-        .attr("id", function (d) {
-            return d.id;
-        })
-        .attr("cy", function (d) {
-            return d.y;
-        })
-        .attr("r", function () {
-            if(window.innerWidth >= 1400 ) { return 6 }
-            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-            else { return 3 }
-        })
-        .style("fill", function (d, i) {
-            if (d.isaudio === "yes") {
-                return "white";
-            } else {
-                return "#181818"
-            }
-        })
-        .style("stroke", function (d, i) {
-            return fill(d.style);
-        })
-        .style("stroke-width", function () {
-            if(window.innerWidth >= 1400 ) { return 6 }
-            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-            else { return 3 }
-
-        })
+        .attr("value", function(d) { return  d.style })
+        .attr("cx", function (d) { return d.x; })
+        .attr("id", function (d) { return d.id; })
+        .attr("cy", function (d) { return d.y; })
+        .attr("r", r)
+        // .attr("r", function () {
+        //     if(window.innerWidth >= 1400 ) { return 6 }
+        //     else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
+        //     else { return 3 }
+        // })
+        .style("fill", function (d) { return d.isaudio === "yes"? "white" : "#181818"; })
+        .style("stroke", function (d) { return fill(d.style); })
+        .style("stroke-width", 5)
         .attr("data-tippy-content", function (d) {
             var linkColor = fill(d.style);
             return "<div id='myTooltip>' >" +
@@ -223,127 +202,71 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                 "</div>" +
                 "</div>"
         })
-        .style("cursor", function (d, i) {
-            if (d.isaudio === "yes") {
-                return "pointer";
-            } else {
-                return false
-            }
-        })
+        .style("cursor", function (d) {  return d.isaudio === "yes" ?"pointer" : false; })
         .on("click", function (d) {
             var currentClickedId = $(this).attr("id");
             var currentClickedValue = $(this).attr("value");
-            console.log(d)
             $(d.radius === 20);
-            var clickCoordinates =  d3.mouse(this);
+            //var clickCoordinates =  d3.mouse(this);
+
             //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
             if(this.classList.contains('played')){
                 audio.pause();
                 d3.select(this)
-                    .style("fill", function() {
-                        if(window.innerWidth >= 1400){
-                           return  "url(#playimage)"
-                        } else {
-                            return  "url(#playimage-sm)"
-                        }
-                    })
-                    .style("stroke-width", '2px');
-
-                $(this).attr("class", "node clicked paused")
-            }
+                    .style("fill", function() { return window.innerWidth >= 1400 ? "url(#playimage)":"url(#playimage-sm)" })
+                    .attr("class", "node clicked paused");
+                }
                 
             //якщо цей кружечок вже клікнутий і натиснута пауза:
             else if(this.classList.contains('paused')) {
                 audio.play();
                 d3.select(this)
-                    .style("fill",  function() {
-                        if(window.innerWidth >= 1400){
-                            return  "url(#pauseimage)"
-                        } else {
-                            return  "url(#pauseimage-sm)"
-                        }
-
-                    })
-                    .style("stroke-width", '2px');
-                $(this).attr("class", "node clicked played")
-            }
+                    .style("fill",  function() { return window.innerWidth >= 1400 ? "url(#pauseimage)":"url(#pauseimage-sm)" })
+                    .attr("class", "node clicked played");
+                }
                 
             //якщо кружечок клікається вперше:
             else {
-                //прибираємо в усіх кружечков будь-які зайві класи
-                d3.selectAll(".node").attr("class", "node");
-                
-                //повертаємо усім кружечкам неактивну заливку, обводку і ширину обводки
-                d3.selectAll(".node")
-                    .style("fill", function(p) {
-                        if (p.isaudio === "yes") {
-                            return "white";
-                        } else {
-                            return "#181818"
-                        }
-                    })
-                    .style("stroke-width", function() {
-                        if(window.innerWidth >= 1400 ) { return 6 }
-                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                        else { return 3 }
-
-                    })
-                    .attr("r", function () {
-                        if(window.innerWidth >= 1400 ) { return 6 }
-                        else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                        else { return 3 }
-                    });
-                
-                //якщо клікнутий має опцію програшу пісні:
                 if (d.isaudio === "yes") {
+                    //прибираємо в усіх кружечков будь-які зайві класи
+                    d3.selectAll(".node").attr("class", "node");
+                
+                    //повертаємо усім кружечкам неактивну заливку, обводку і ширину обводки
+                    d3.selectAll(".node")
+                        .style("fill", function(p) { return p.isaudio === "yes" ? "white" : "#181818" })
+                        .attr("r", r);
+
                     //додаємо до обраного потрібні класи - "клікнутий та грає"
                     d3.select(this).attr("class", "node clicked played");
                     
                     //міняємо фонову картинку кнопки
                     d3.select(this)
-                        .style("fill",  function() {
-                            if(window.innerWidth >= 1400){
-                                return  "url(#pauseimage)"
-                            } else {
-                                return  "url(#pauseimage-sm)"
-                            }
-
-                        })
+                        .style("fill", function() { return window.innerWidth >= 1400?"url(#pauseimage)":"url(#pauseimage-sm)" })
                         .style("stroke-width", '3px');
-                    
-                    //додаємо потрібне аудіо
-                    $("audio").attr("src", function () {
-                        return "sounds/" + d.audio
 
-                    });
-
-                    //додаємо назву пісні поруч з кліком
-                    d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album);
-                    
-                    //збільшуємо радіус клікнутого
-                    d3.select(this).attr("r", function() {
-                        if(window.innerWidth >= 1400 ) { return 20 }
-                        else { return 15 }
-                    });
+                    $("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
+                    d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
+                    d3.select(this).attr("r", function() { return window.innerWidth >= 1400 ? 20 : 15 });  //збільшуємо радіус клікнутого
 
 
+                    //оця штука якось перемальовуэ колайд, щоб збільшений кружечок вміщався???
                     var selectedCurrentNodes = d3.selectAll(".node[value = '" + currentClickedValue + "']"  );
                     var selectedPreviousNodes = d3.selectAll(".node[value = '" + previousClickedValue + "']");
                     for(var i = 0; i < selectedPreviousNodes.length; i++) {
                         selectedCurrentNodes.push(selectedPreviousNodes[i])
                     }
 
-                   var newdata;
+                   var newdata = dataUnique;
 
                     var activeLi = $("button.active").attr('id');
 
-                    if (activeLi === "style" || activeLi === "language" || activeLi === "sex"){
-                        newdata = dataUnique;
-                    } else if(activeLi === "region"){
-                        newdata = dataForRegions
-                    } else if(activeLi === "aprize"){
-                        newdata = dataForAprizeWithoutRegions
-                    }
+                    // if (activeLi === "style" || activeLi === "language" || activeLi === "sex"){
+                    //     newdata = dataUnique;
+                    // } else if(activeLi === "region"){
+                    //     newdata = dataForRegions
+                    // } else if(activeLi === "aprize"){
+                    //     newdata = dataForAprizeWithoutRegions
+                    // }
 
                     for (var j = 0; j < newdata.length; j++) {
                         if(newdata[j].id === currentClickedId) {
@@ -357,9 +280,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     var centers = getCenters(activeLi, [width, height], newdata);
                     force.on("tick", tickRedraw(selectedCurrentNodes, centers, activeLi, newdata));
                     force.start();
-
-
-
                     previousClickedValue = currentClickedValue;
 
 
@@ -367,84 +287,39 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
                     $("audio").get(0).play();
                         $("#playing-album").attr("src", d.image);
                         $("#playing-song").html("Ви слухаєте: <b>" + d.group + " - " + d.album + "</b> ");
+                    }
                 }
-            }
         })
         .on("mouseover", function (d) {
             d3.selectAll(".node")
                 .filter(function() {
                     return !this.classList.contains('clicked')
                 })
-                .style("fill", function(p) {
-                    if (p.isaudio === "yes") {
-                        return "white";
-                    } else {
-                        return "#181818"
-                    }
-
-                })
-                .style("stroke-width", function() {
-                    if(window.innerWidth >= 1400 ) { return 6 }
-                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                    else { return 3 }
-
-                })
-                .attr("r", function () {
-                    if(window.innerWidth >= 1400 ) { return 6 }
-                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                    else { return 3 }
-                })
+                .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
+                .style("stroke-width", 5)
+                .attr("r",  r);
             
             //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
             if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
                 d3.select(this)
-                    .attr("r", function() {
-                        if(window.innerWidth >= 1400 ) { return 14 }
-                        else { return 9 }
-                    });
-                d3.select(this)
-                    .style("fill", function() {
-                        if(window.innerWidth >= 1400){
-                            return  "url(#playimage-md)"
-                        } else {
-                            return  "url(#playimage-sm-hover)"
-                        }
-                    })
+                    .attr("r", function() { return  window.innerWidth >= 1400 ? 14 : 9})
+                    .style("fill", function() { return window.innerWidth >= 1400?"url(#playimage-md)":"url(#playimage-sm-hover)" })
                     .style("stroke-width", '3px');
-            }
+                }
 
             $("li.list").css("text-decoration", "none");
             var theStyle = d.style;
             theStyle = capitalize(theStyle);
             $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
 
-
         })
         .on("mouseout", function (d) {
            /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
             d3.selectAll(".node")
-                .filter(function() {
-                    return !this.classList.contains('clicked')
-                })
-                .style("fill", function(p) {
-                    if (p.isaudio === "yes") {
-                        return "white";
-                    } else {
-                        return "#181818"
-                    }
-
-                })
-                .style("stroke-width", function() {
-                    if(window.innerWidth >= 1400 ) { return 6 }
-                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                    else { return 3 }
-
-                })
-                .attr("r", function () {
-                    if(window.innerWidth >= 1400 ) { return 6 }
-                    else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                    else { return 3 }
-                })
+                .filter(function() { return !this.classList.contains('clicked') })
+                .style("fill", function(p) { return p.isaudio === "yes"? "white": "#181818" })  
+                .style("stroke-width", 5)
+                .attr("r", r)
         });
 
 
@@ -452,25 +327,15 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
     draw('style');
 
-
     $(window).on("resize", function (d) {
         width = screen.width * 0.9;
         height = screen.height * 0.9;
         svg.attr("width", width).attr("height", height);
         var activeLi = $("button.active").attr('id');
-        draw(activeLi)
+        draw(activeLi);
         svg.selectAll(".node")
-            .attr("r", function(){
-            if(window.innerWidth >= 1400 ) { return 6 }
-            else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-            else { return 3 }
-        })
-            .style("stroke-width", function() {
-                if(window.innerWidth >= 1400 ) { return 6 }
-                else if(window.innerWidth < 1400 && window.innerWidth > 700) { return 4 }
-                else { return 3 }
-
-            })
+            .attr("r", r)
+            .style("stroke-width", 5)
     });
 
 
@@ -482,92 +347,36 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
         draw(this.id);
     });
 
+
+    /* функція перемальовки при зміні вкладки*/
     function draw(varname) {
         var centers;
-
-        if (varname === "region") {
-            d3.selectAll(".node").each(function(k){
-                d3.select(this).attr("value", k.region)
-            });
-            d3.select("#styleColorGuide").style("opacity", "1");
-            centers = getCenters(varname, [width, height], dataForRegions);
-            force.on("tick", tick(centers, varname, dataForRegions));
-            labels(centers);
-            force.start();
-            excludeId.forEach(function (id) {
-                $("#" + id).css("display", "none");
-            }); //тут в нас усі не унікальні айді, ми їх показуємо
-            IDofDoublesFromAllAlbums.forEach(function (id) {
-                $("#" + id).css("display", "block");
-            }); //тут в нас повтори по регіону
+        var dataset;
+        if(varname === "region"){
+            dataset = dataForRegions;
+        } else if (varname === "aprize"){
+            dataset = dataForAprizeWithoutRegions;
+        } else {
+            dataset = dataUnique
         }
 
+        d3.selectAll(".node").each(function(k){
+            d3.select(this).attr("value", k[varname])
+        });
+        d3.select("#styleColorGuide").style("opacity", varname === "style"? 0 : 1);
+        centers = getCenters(varname, [width, height], dataset);
+        force.on("tick", tick(centers, varname, dataset));
+        labels(centers);
+        force.start();
+        excludeId.forEach(function (id) {
+            $("#" + id).css("display", varname === "aprize" ? "block" : "none");
+        }); //тут в нас усі не унікальні айді, ми їх показуємо
+        IDofDoublesFromAllAlbums.forEach(function (id) {
+            $("#" + id).css("display", varname === "region"?"block" : "none");
+        }); //тут в нас повтори по регіону
 
-        else if (varname === "aprize") {
-            d3.selectAll(".node").each(function(k){
-                d3.select(this).attr("value", k.aprize)
-            });
-            d3.select("#styleColorGuide").style("opacity", "1")
-            centers = getCenters(varname, [width, height], dataForAprizeWithoutRegions);
-            force.on("tick", tick(centers, varname, dataForAprizeWithoutRegions));
-            labels(centers);
-            force.start();
-            excludeId.forEach(function (id) {
-                $("#" + id).css("display", "block");
-            }); //тут в нас усі не унікальні айді, ми їх показуємо
-
-            IDofDoublesFromAllAlbums.forEach(function (id) {
-                $("#" + id).css("display", "none");
-            }); //тут в нас повтори по регіону
-
-            d3.select("#styleColorGuide").style("opacity", "1")
-        }
-
-       else if(varname === "language") {
-            d3.selectAll(".node").each(function(k){
-                d3.select(this).attr("value", k.language)
-            });
-            d3.select("#styleColorGuide").style("opacity", "1")
-            centers = getCenters(varname, [width, height], dataUnique);
-            force.on("tick", tick(centers, varname, dataUnique));
-            labels(centers);
-            force.start();
-            excludeId.forEach(function (id) {
-                $("#" + id).css("display", "none");
-            });
-        }
-
-
-       else if(varname === "sex") {
-            d3.selectAll(".node").each(function(k){
-                d3.select(this).attr("value", k.sex)
-            });
-            d3.select("#styleColorGuide").style("opacity", "1")
-            centers = getCenters(varname, [width, height], dataUnique);
-            force.on("tick", tick(centers, varname, dataUnique));
-            labels(centers);
-            force.start();
-            excludeId.forEach(function (id) {
-                $("#" + id).css("display", "none");
-            });
-        }
-
-       else if(varname === "style") {
-            d3.selectAll(".node").each(function(k){
-                d3.select(this).attr("value", k.style)
-            });
-            d3.select("#styleColorGuide").style("opacity", "0")
-            centers = getCenters(varname, [width, height], dataUnique);
-            force.on("tick", tick(centers, varname, dataUnique));
-            labels(centers);
-            force.start();
-            excludeId.forEach(function (id) {
-                $("#" + id).css("display", "none");
-            });
-
-
-        }
     }
+
 
     function tick(centers, varname, df) {
         var foci = {};
@@ -617,7 +426,6 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
 
     function labels(centers) {
         svg.selectAll(".label").remove();
-
         svg.selectAll(".label")
             .data(centers).enter().append("text")
             .attr("class", "label")
@@ -626,10 +434,8 @@ d3.csv('data/joinedDataAll.csv', function (error, data) {
             })
             .attr("transform", function (d) {
                 return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
-
             })
-            .style("text-transform", "uppercase")
-        ;
+            .style("text-transform", "uppercase");
     }
 
     tippy(".node", {

@@ -94,7 +94,9 @@
 
 <div id="graphics">
     <div class="text text-top">
-    <h1>Українські альбоми — 2018</h1>
+    <h1>Українські альбоми</h1>
+        <button id="y_2018" class="select-year">2018</button>
+        <button id="y_2019" class="select-year">2019</button>
     <p style="margin-top:50px;"><i>Перемикаючись між вкладками, можна побачити розподіл альбомів за стилем, <br>статтю, мовою, регіоном, а також подивитись, які виконавці потрапили в довгий і короткий листи премії.</i></p>
     </div>
 
@@ -109,26 +111,11 @@
 
         <div id="playing-now">
             <p id="playing-song"><i></i></p>
-            <!--<img id="playPause" src=""/>-->
         </div>
-
-
     </div>
 
-    <ul id="styleColorGuide">
-        <li class="list" style="color:#b20000">Rock</li>
-        <li class="list" style="color:yellow">R&b and soul</li>
-        <li class="list" style="color:#8c5754">Country</li>
-        <li class="list" style="color:#c3c3c3">Instrumental</li>
-        <li class="list" style="color:#0977f6">Indie</li>
-        <li class="list" style="color:#fcc980">Jazz</li>
-        <li class="list" style="color:#adeda6">Ethno</li>
-        <li class="list" style="color:#db656b">Metal</li>
-        <li class="list" style="color:#4cb69c">Avant-garde</li>
-        <li class="list" style="color:#d372d9">Pop</li>
-        <li class="list" style="color:#53a424">Hip hop & rap</li>
-        <li class="list" style="color:#a26fdc">Electronic</li>
-    </ul>
+
+    <ul id="styleColorGuide"></ul>
 
     <audio id="audio">
         <source src="" type="audio/mp3">
@@ -136,10 +123,7 @@
     </audio>
 
     <div id="titles_group"></div>
-    <div id="chart">
-        <!--<svg id="main" width="100%" height="700" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>-->
-
-    </div>
+    <div id="chart"></div>
 
     <div class="text text-bottom">
     <p><i>Кожен кружечок — один альбом. Наведіть на нього мишею, аби подивитись детальну інформацію. Рядок «стиль» у спливаючому вікні — означає стиль, за яким артисти себе ідентифікують, якщо він порожній, значить нам не вдалося знайти відповідну інформацію.
@@ -293,19 +277,18 @@
 </div>
 
 <script src="lib/jquery-2.1.4.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <!--<script src="lib/d3.__min.js"></script>-->
 <!--<script src="lib/d3-legend.__min.js"></script>-->
 <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>
 <script src="lib/bootstrap.js"></script>
 <script src="lib/underscore.js"></script>
-<script src="js/script.js"></script>
+<script src="js/script_19.js"></script>
 <script src="lib/share-behavior.js"></script>
 
 
 <script>
     setTimeout(function(){
-
         var coverHeight = document.getElementById("cover").getBoundingClientRect().height;
         document.getElementById("arrow-down").style.top = coverHeight - (window.innerWidth / 10) + "px";
         $("#arrow-down").append('<img id="arrow-down-pic" title="скрольте вниз" style="width:5vw;" src="img/arrow-down2.png"/>');
