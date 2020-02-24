@@ -15,22 +15,27 @@ var regionOrder = ["", "інший", "Північ", "Південь", "Зако
 var languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
 var r = 6;
 
-var width;
-var height;
-var padding;
+var width =  1500;
+var height =  1000;
+var padding = 10;
 
-if (window.innerWidth > 700) { width = window.innerWidth * 0.8; } else { width = window.innerWidth * 0.9; }
-if (window.innerWidth > 700) { height = window.innerHeight * 0.9; } else {  height = window.innerHeight * 1.4; }
-if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 4 } else { padding = 4 }
+// if (window.innerWidth > 700) { width = window.innerWidth * 0.85 } else { width = window.innerWidth * 0.9}
+// if (window.innerWidth > 1200) { height = window.innerHeight ; } else {  height = window.innerHeight * 3; }
+// if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 10 } else { padding = 10 }
 
 var svg = d3.select("#chart").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("viewBox", "0 0  "  + width + " " + height);
+    // .attr("width", width)
+    // .attr("height", height)
+
+
+var g = svg.append("g");
 
 var force = d3.layout.force();
 
 
 var render = function(df){
+
     var currentData = df;
 
     for (var j = 0; j < currentData.length; j++) {
@@ -62,7 +67,7 @@ var render = function(df){
 
         var previousClickedValue;
 
-        var circles = svg.selectAll(".node").data(dataUnique);
+        var circles = g.selectAll(".node").data(dataUnique);
 
         circles
             .enter()
@@ -221,11 +226,14 @@ var render = function(df){
             }
        });
 
-       draw("style", dataUnique);
+       var activeButton = $('.active').attr('id');
+       draw(activeButton, dataUnique);
 
         $("button").click(function () {
             draw(this.id, dataUnique);
         });
+
+
     };
 
 
@@ -240,15 +248,23 @@ var render = function(df){
     
         d3.selectAll(".select-year").on("click", function() {
             var selected_year = d3.select(this).text();
+            if(selected_year === "2019") {
+               d3.select("#language").style("display", "none")
+            } else {
+                d3.select("#language").style("display", "inline")
+            }
             var newData = input.filter(function (d) {
                 return d.year === selected_year
             });
     
-            render(newData)
+            render(newData);
+
+            $(window).on("resize", function () {
+                render(newData);
+
+            });
         });
     });
-
-
 
 
 
@@ -319,8 +335,8 @@ var render = function(df){
     }
 
     function labels(centers) {
-        svg.selectAll(".label").remove();
-        svg.selectAll(".label")
+        g.selectAll(".label").remove();
+        g.selectAll(".label")
             .data(centers).enter().append("text")
             .attr("class", "label")
             .text(function (d) {
@@ -372,9 +388,23 @@ $("#toolbar > button").on("click", function () {
 /* функція, що робить колайд*/
 var getCenters = function (vname, size, df) {
     var centers, map;
+
+    // var counted = _.countBy(df, vname);
+    //
+    // var counted_styles = [];
+    //
+    // var result = Object.keys(counted).map(function (key) {
+    //     counted_styles.push({name: (key), value: counted[key]});
+    // });
+
+
+
+
     centers = _.uniq(_.pluck(df, vname)).map(function (d) {
-        return {name: d, value: 1};
+        return { name: d, value: 1 };
     });
+
+    console.log(centers);
 
     //якщо непарна кількість кластерів, додаємо пустий, щоб вирівняти грід
     var plusone = {name: "", value: 1};
@@ -398,7 +428,7 @@ var getCenters = function (vname, size, df) {
 
     });
 
-    map = d3.layout.treemap().size(size).ratio(1 / 1);
+    map = d3.layout.treemap().size(size).padding(10).ratio(1 / 1);
     map.nodes({children: centers});
     return centers;
 };
