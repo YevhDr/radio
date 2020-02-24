@@ -13,14 +13,15 @@ var sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
 var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 var regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
 var languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
-var r = 6;
+var r;
 
 var width =  1500;
-var height =  1000;
+var height;
 var padding = 10;
 
 // if (window.innerWidth > 700) { width = window.innerWidth * 0.85 } else { width = window.innerWidth * 0.9}
-// if (window.innerWidth > 1200) { height = window.innerHeight ; } else {  height = window.innerHeight * 3; }
+if (window.innerWidth > 1200) { height = window.innerHeight ; } else {  height = 2000; }
+if (window.innerWidth > 1200) { r = 6 ; } else {  r = 12; }
 // if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 10 } else { padding = 10 }
 
 function zoomed() {
@@ -36,10 +37,11 @@ var zoom = d3.behavior.zoom()
     .on("zoom", zoomed);
 
 var svg = d3.select("#chart").append("svg")
-    .attr("viewBox", "0 0  "  + width + " " + height)
+    .attr("viewBox", "0 0 " + width + " " + height )
     .call(zoom);
+
     // .attr("width", width)
-    // .attr("height", height)
+    // .attr("height", height);
 
 
 var g = svg.append("g");
@@ -52,7 +54,7 @@ var render = function(df){
     var currentData = df;
 
     for (var j = 0; j < currentData.length; j++) {
-        currentData[j].radius = 5;
+        currentData[j].radius = r;
         currentData[j].x = Math.random() * width;
         currentData[j].y = Math.random() * height;
        }
@@ -92,7 +94,7 @@ var render = function(df){
             .attr("cx", function (d) { return d.x; })
             .attr("id", function (d) { return d.id; })
             .attr("cy", function (d) { return d.y; })
-            .attr("r", 5)
+            .attr("r", r)
             .style("stroke-width", 5)
             .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
             .style("stroke", function(d) { return newFill(d.style); })
@@ -155,7 +157,7 @@ var render = function(df){
 
                        $("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                        d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
-                       d3.select(this).attr("r", function() { return window.innerWidth >= 1400 ? 20 : 15 });  //збільшуємо радіус клікнутого
+                       d3.select(this).attr("r", r * 3 );  //збільшуємо радіус клікнутого
 
 
                        //оця штука якось перемальовуэ колайд, щоб збільшений кружечок вміщався???
@@ -174,10 +176,10 @@ var render = function(df){
 
                        for (var j = 0; j < newD.length; j++) {
                            if(newD[j].id === currentClickedId) {
-                               newD[j].radius = 15;
+                               newD[j].radius = r * 3;
                            }
                            else {
-                               newD[j].radius = 5;
+                               newD[j].radius = r;
                            }
                        }
 
@@ -271,11 +273,6 @@ var render = function(df){
             });
     
             render(newData);
-
-            $(window).on("resize", function () {
-                render(newData);
-
-            });
         });
     });
 
@@ -402,22 +399,13 @@ $("#toolbar > button").on("click", function () {
 var getCenters = function (vname, size, df) {
     var centers, map;
 
-    // var counted = _.countBy(df, vname);
-    //
-    // var counted_styles = [];
-    //
-    // var result = Object.keys(counted).map(function (key) {
-    //     counted_styles.push({name: (key), value: counted[key]});
-    // });
+   var counted_styles =  _.countBy(df, vname);
 
-
-
-
-    centers = _.uniq(_.pluck(df, vname)).map(function (d) {
+    centers = _.uniq(_.pluck(df, vname)).map(function (d, i) {
+        //return { name: d, value: counted_styles[d] };
         return { name: d, value: 1 };
     });
 
-    console.log(centers);
 
     //якщо непарна кількість кластерів, додаємо пустий, щоб вирівняти грід
     var plusone = {name: "", value: 1};
