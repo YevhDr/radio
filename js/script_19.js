@@ -23,8 +23,21 @@ var padding = 10;
 // if (window.innerWidth > 1200) { height = window.innerHeight ; } else {  height = window.innerHeight * 3; }
 // if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 10 } else { padding = 10 }
 
+function zoomed() {
+    g.style("stroke-width", 1.5 / d3.event.scale + "px");
+    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+
+var zoom = d3.behavior.zoom()
+    .translate([0, 0])
+    .scale(1)
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed);
+
 var svg = d3.select("#chart").append("svg")
-    .attr("viewBox", "0 0  "  + width + " " + height);
+    .attr("viewBox", "0 0  "  + width + " " + height)
+    .call(zoom);
     // .attr("width", width)
     // .attr("height", height)
 
