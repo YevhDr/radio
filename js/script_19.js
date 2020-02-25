@@ -13,12 +13,12 @@ const regionOrder = ["", "інший", "Північ", "Південь", "Зак
 const languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
 
 
-const margin = {top: 50, right: 50, bottom: 50, left: 50};
+const margin = {top: 0, right: 50, bottom: 50, left: 50};
 const width = window.innerWidth * 0.8;
 var height;
 const padding = 10;
 const r = 6;
- if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.3 }
+ if(window.innerWidth > 1200){ height  = window.innerHeight } else { height  = window.innerHeight * 1.3 }
 
 
 var svg = d3.select("#chart").append("svg")
@@ -370,7 +370,7 @@ var renderMobile = function(df) {
                     return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
                 }
             })
-            .on("click", function(d){
+            .on("touchstart click", function(d){
                 if(d.isaudio === "yes") {
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
