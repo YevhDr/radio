@@ -42,7 +42,10 @@
     <!-- Links -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i&amp;subset=cyrillic,greek-ext"
           rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" href="css/styles.css"/>
+
 </head>
 <body>
 
@@ -117,7 +120,7 @@
     </div>
 
 
-    <ul id="styleColorGuide"></ul>
+    <!--<ul id="styleColorGuide"></ul>-->
 
     <audio id="audio">
         <source src="" type="audio/mp3">
@@ -126,6 +129,7 @@
 
 
     <div id="chart"></div>
+    <div id="chart-mobile"></div>
 
     <div class="text text-bottom">
 
@@ -309,71 +313,88 @@
 </script>
 
 
-<svg id="myPlaySvg" width="40" height="40">
+<!--<svg id="myPlaySvg" width="40" height="40">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="playimage" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
+
+<!--<svg id="myPauseSvg" width="40" height="40">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="pauseimage" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
+
+<svg id="myPlaySvg-md" width="37" height="37">
     <defs id="mdef">
-        <pattern id="playimage" x="0" y="0" height="100%" width="100%">
+        <pattern id="playimage-click" x="0" y="0" height="100%" width="100%">
             <image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>
         </pattern>
     </defs>
 </svg>
 
-<svg id="myPauseSvg" width="40" height="40">
+<svg id="myPauseSvg-md" width="37" height="37">
     <defs id="mdef">
-        <pattern id="pauseimage" x="0" y="0" height="100%" width="100%">
+        <pattern id="pauseimage-click" x="0" y="0" height="100%" width="100%">
             <image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>
         </pattern>
     </defs>
 </svg>
 
-<svg id="myPlaySvg-md" width="28" height="28">
+<svg id="myPlaySvg-md2" width="30" height="30">
     <defs id="mdef">
-        <pattern id="playimage-md" x="0" y="0" height="100%" width="100%">
+        <pattern id="playimage-hover" x="0" y="0" height="100%" width="100%">
             <image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>
         </pattern>
     </defs>
 </svg>
 
-<svg id="myPauseSvg-md" width="28" height="28">
+<svg id="myPauseSvg-md2" width="30" height="30">
     <defs id="mdef">
-        <pattern id="pauseimage-md" x="0" y="0" height="100%" width="100%">
+        <pattern id="pauseimage-hover" x="0" y="0" height="100%" width="100%">
             <image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>
         </pattern>
     </defs>
 </svg>
 
 
-<svg id="myPlaySvg-sm-hover" width="18" height="18">
-    <defs id="mdef">
-        <pattern id="playimage-sm-hover" x="0" y="0" height="100%" width="100%">
-            <image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>
-        </pattern>
-    </defs>
-</svg>
 
-<svg id="myPauseSvg-sm-hover" width="18" height="18">
-    <defs id="mdef">
-        <pattern id="pauseimage-sm-hover" x="0" y="0" height="100%" width="100%">
-            <image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>
-        </pattern>
-    </defs>
-</svg>
+<!--<svg id="myPlaySvg-sm-hover" width="18" height="18">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="playimage-sm-hover" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
+
+<!--<svg id="myPauseSvg-sm-hover" width="18" height="18">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="pauseimage-sm-hover" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
 
 
-<svg id="myPlaySvg-sm" width="30" height="30">
-    <defs id="mdef">
-        <pattern id="playimage-sm" x="0" y="0" height="100%" width="100%">
-            <image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>
-        </pattern>
-    </defs>
-</svg>
+<!--<svg id="myPlaySvg-sm" width="30" height="30">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="playimage-sm" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/play.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
 
-<svg id="myPauseSvg-sm" width="30" height="30">
-    <defs id="mdef">
-        <pattern id="pauseimage-sm" x="0" y="0" height="100%" width="100%">
-            <image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>
-        </pattern>
-    </defs>
-</svg>
+<!--<svg id="myPauseSvg-sm" width="30" height="30">-->
+    <!--<defs id="mdef">-->
+        <!--<pattern id="pauseimage-sm" x="0" y="0" height="100%" width="100%">-->
+            <!--<image x="0" y="0" width="100%" height="100%" xlink:href="img/pause.svg"></image>-->
+        <!--</pattern>-->
+    <!--</defs>-->
+<!--</svg>-->
 
 <script type="text/javascript">
     var _gaq = _gaq || [];

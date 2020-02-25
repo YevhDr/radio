@@ -55,6 +55,9 @@ svg#twitter {
   outline: none;
   box-sizing: border-box; }
 
+.hidden {
+  display: none !important; }
+
 .boldtext {
   font-weight: bold !important; }
 
@@ -121,11 +124,11 @@ body {
 
 .text-top {
   padding-top: 30px;
-  margin: 20px auto 50px auto; }
+  margin: 20px auto 30px auto; }
 
 .text-bottom {
   padding-bottom: 30px;
-  margin: 20px auto 50px auto; }
+  margin: 20px auto 30px auto; }
 
 h1 {
   font-size: 40px; }
@@ -162,7 +165,7 @@ button.active {
 
 #toolbar {
   z-index: 1;
-  margin: 10px auto 50px auto;
+  margin: 10px auto 30px auto;
   width: -moz-max-content;
   width: -webkit-max-content;
   width: max-content; }
@@ -173,6 +176,31 @@ button.active {
 
 #chart {
   width: 80%; }
+  @media (max-width: 812px) {
+    #chart {
+      display: none; } }
+
+#chart-mobile {
+  display: none;
+  justify-content: space-around;
+  flex-wrap: wrap; }
+  @media (max-width: 812px) {
+    #chart-mobile {
+      height: 60vh;
+      overflow-y: auto;
+      display: block; } }
+  #chart-mobile div.cell {
+    width: 200px;
+    margin-left: 25px; }
+    @media (max-width: 812px) {
+      #chart-mobile div.cell {
+        width: calc(100% - 30px); } }
+  #chart-mobile .category_button {
+    width: max-content; }
+  #chart-mobile .album {
+    transition: all 2s; }
+  #chart-mobile .album > p {
+    font-size: 13px; }
 
 svg text {
   font-size: 18px;
@@ -181,9 +209,6 @@ svg text {
   pointer-events: none;
   fill: #d1d1d1;
   font-weight: bold; }
-  @media (max-width: 900px) {
-    svg text {
-      font-size: 50px; } }
 
 #metal {
   display: block; }
@@ -205,10 +230,8 @@ g#styles {
 
 #playing-now {
   height: 50px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  margin: -30px auto 0 auto;
+  width: 80%;
+  margin: 0 auto;
   text-align: center; }
 
 #playing-song, #playing-song-mob {

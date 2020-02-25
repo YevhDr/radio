@@ -3,56 +3,38 @@
  */
 
 $("a").attr("target", "_blank");
+const audio = document.getElementById("audio");
 
-
-
-var audio = document.getElementById("audio");
 
 //сортуємо по заданим параметрам.... здається не працює
-var sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
-var styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-var regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-var languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
-var r;
+const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
+const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
+const regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
+const languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
 
-var width =  1500;
+
+const margin = {top: 50, right: 50, bottom: 50, left: 50};
+const width = window.innerWidth * 0.8;
 var height;
-var padding = 10;
+const padding = 10;
+const r = 6;
+ if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.3 }
 
-// if (window.innerWidth > 700) { width = window.innerWidth * 0.85 } else { width = window.innerWidth * 0.9}
-if (window.innerWidth > 1200) { height = window.innerHeight ; } else {  height = 2000; }
-if (window.innerWidth > 1200) { r = 6 ; } else {  r = 12; }
-// if (window.innerWidth >= 1400) { padding = 15 } else if(window.innerWidth < 1400 && window.innerWidth > 700) { padding = 10 } else { padding = 10 }
-
-function zoomed() {
-    g.style("stroke-width", 1.5 / d3.event.scale + "px");
-    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
-
-
-var zoom = d3.behavior.zoom()
-    .translate([0, 0])
-    .scale(1)
-    .scaleExtent([1, 8])
-    .on("zoom", zoomed);
 
 var svg = d3.select("#chart").append("svg")
-    .attr("viewBox", "0 0 " + width + " " + height )
-    .call(zoom);
-
-    // .attr("width", width)
-    // .attr("height", height);
+   .attr("width", width)
+   .attr("height", height)
+    ;
 
 
-var g = svg.append("g");
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var force = d3.layout.force();
 
 
 var render = function(df){
-
     var currentData = df;
-
     for (var j = 0; j < currentData.length; j++) {
         currentData[j].radius = r;
         currentData[j].x = Math.random() * width;
@@ -113,9 +95,7 @@ var render = function(df){
            })
            .on("click", function (d) {
                var currentClickedId = d3.select(this).attr("id");
-               console.log(currentClickedId);
                var currentClickedValue = d3.select(this).attr("value");
-               console.log(currentClickedValue);
 
                // d3.select(this).attr("r", 20);
 
@@ -123,7 +103,7 @@ var render = function(df){
                if(this.classList.contains('played')){
                    audio.pause();
                    d3.select(this)
-                       .style("fill", function() { return window.innerWidth >= 1400 ? "url(#playimage)":"url(#playimage-sm)" })
+                       .style("fill", function() { return  "url(#playimage-click)"})
                        .attr("class", "node clicked paused");
                }
 
@@ -131,7 +111,7 @@ var render = function(df){
                else if(this.classList.contains('paused')) {
                    audio.play();
                    d3.select(this)
-                       .style("fill",  function() { return window.innerWidth >= 1400 ? "url(#pauseimage)":"url(#pauseimage-sm)" })
+                       .style("fill",  function() { return "url(#pauseimage-click)"})
                        .attr("class", "node clicked played");
                }
 
@@ -152,7 +132,7 @@ var render = function(df){
 
                        //міняємо фонову картинку кнопки
                        d3.select(this)
-                           .style("fill", function() { return window.innerWidth >= 1400?"url(#pauseimage)":"url(#pauseimage-sm)" })
+                           .style("fill", function() { return "url(#pauseimage-click)" })
                            .style("stroke-width", '3px');
 
                        $("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
@@ -169,8 +149,6 @@ var render = function(df){
                        }
 
                       var activeLi = $("button.active").attr('id');
-                      console.log(activeLi);
-
 
                        var newD = dataUnique;
 
@@ -207,8 +185,8 @@ var render = function(df){
                //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
                if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
                    d3.select(this)
-                       .attr("r", function() { return  window.innerWidth >= 1400 ? 14 : 9})
-                       .style("fill", function() { return window.innerWidth >= 1400?"url(#playimage-md)":"url(#playimage-sm-hover)" })
+                       .attr("r", r * 2.5)
+                       .style("fill", function() { return "url(#playimage-hover)" })
                        .style("stroke-width", '3px');
                }
 
@@ -251,14 +229,39 @@ var render = function(df){
 
     };
 
+var renderMobile = function(df) {
+    d3.select("#chart-mobile").html("");
+
+    var activeButton = $('.active').attr('id');
+    draw_mobile(activeButton, df);
+
+    d3.selectAll("#toolbar > button").on("click", function () {
+        draw_mobile(this.id, df);
+    });
+
+    tippy(".album", {
+        allowHTML: true,
+        animateFill: false,
+        animation: "fade",
+        interactive: true,
+        hideOnClick: true,
+        theme: 'width-200',
+        onShow(tip) {
+            tip.setContent(tip.reference.getAttribute('data-tippy-content'))
+        }
+    });
+};
+
+
 
     d3.csv('data/random_18_19.csv', function (error, input) {
     
         var data = input.filter(function(d) {
             return d.year === "2018"
         });
-    
+
         render(data);
+        renderMobile(data);
     
     
         d3.selectAll(".select-year").on("click", function() {
@@ -273,6 +276,7 @@ var render = function(df){
             });
     
             render(newData);
+            renderMobile(newData);
         });
     });
 
@@ -295,6 +299,106 @@ var render = function(df){
         force.on("tick", tick(centers, varname, dataset));
         labels(centers);
         force.start();
+    }
+
+    /* віжмальовка мобільних списків */
+
+    function draw_mobile(varname, df){
+        var newFill = d3.scale.ordinal()
+            .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
+            .domain(d3.map(df, function(d){return d.style;}));
+
+        var prepared = d3.nest()
+            .key(function(d) { return d[varname]; })
+            .entries(df);
+
+        d3.select("#chart-mobile").html("");
+
+        var styleButton = d3.select("#chart-mobile")
+            .selectAll("div")
+            .data(prepared)
+            .enter()
+            .append("div")
+            .attr("class", "cell")
+            .attr("id", function(d) { return d.values[0].style });
+
+
+        styleButton.append("h4")
+            .attr("class", "category_button")
+            .text(function(d){
+                return d.key;
+            })
+            .style('background-color', function(d){
+                if(varname === "style"){
+                    return newFill(d.key)
+                } else {
+                    return "lightgrey"
+                }
+            })
+            .style("color", "black")
+            .style("width", "max-content")
+            .style("padding", "10px");
+
+
+        styleButton
+            .selectAll("div")
+            .data(function(d) {return d.values })
+            .enter()
+            .append("div")
+            .attr("class", function(d) { return "tip album hidden " + d.style })
+            .attr("data-tippy-content", function (d) {
+                var linkColor = newFill(d.style);
+                return "<div id='myTooltip>' >" +
+                    "<div id='album-picture'>" +
+                    "<img style='width: 100px;' src='" + d.image + "'/></div>" +
+                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
+                    "Альбом: <b>" + d.album + "</b><br>" +
+                    "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
+                    "Місто:  <b>" + d.City + "</b><br> " +
+                    "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
+                    "</div>" +
+                    "</div>";
+            })
+            .style("display", "flex")
+            .style("color", function(d){
+                return newFill(d.style)
+            })
+            .html(function(d){
+                if(d.isaudio === "yes") {
+                    return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
+                } else {
+                    return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
+                }
+            })
+            .on("click", function(d){
+                if(d.isaudio === "yes") {
+                    d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
+                    d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
+
+                    //починаємо грати
+                    $("audio").get(0).play();
+                    d3.select("#playing-album").attr("src", function(){ return d.image});
+                    d3.select("#playing-song")
+                        .style("color", newFill(d.style))
+                        .html("Ви слухаєте: <b>" + d.group + " - " + d.album + "</b> ");
+                }
+
+            });
+
+        d3.selectAll(".category_button").on("click", function(d){
+            var selected = d3.select(this.parentNode).selectAll(".album");
+            selected.each(function(){
+                d3.select(this).classed("hidden", d3.select(this).classed("hidden") ? false : true)
+            })
+        });
+
+
+        d3.selectAll(".cell").each(function(){
+            d3.select(this).selectAll(".album").sort(function(a, b){
+                return d3.ascending(a.style, b.style)
+            })
+
+        });
     }
 
 
@@ -429,7 +533,7 @@ var getCenters = function (vname, size, df) {
 
     });
 
-    map = d3.layout.treemap().size(size).padding(10).ratio(1 / 1);
+    map = d3.layout.treemap().size(size).padding(50).ratio(1 / 1);
     map.nodes({children: centers});
     return centers;
 };
@@ -446,7 +550,6 @@ setTimeout(function () {
         relativePos.bottom = childrenPos.bottom - parentPos.bottom,
         relativePos.left = childrenPos.left - parentPos.left;
 
-    console.log(relativePos);
     $("#styleColorGuide ").css("top", relativePos.top + 20);
 }, 100);
 
