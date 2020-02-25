@@ -124,14 +124,15 @@ body {
 
 .text-top {
   padding-top: 30px;
-  margin: 20px auto 30px auto; }
+  margin: 20px auto 50px auto; }
 
 .text-bottom {
   padding-bottom: 30px;
   margin: 20px auto 30px auto; }
 
 h1 {
-  font-size: 40px; }
+  font-size: 40px;
+  margin: 0 auto; }
 
 p {
   font-size: 20px; }
@@ -162,6 +163,9 @@ button.active {
   background-color: rgba(225, 225, 225, 0.2);
   border: 2px solid #e1e1e1;
   color: #e1e1e1; }
+
+button.select-year {
+  font-size: 25px; }
 
 #toolbar {
   z-index: 1;
@@ -294,7 +298,7 @@ g#styles {
   margin: 100px auto 50px auto; }
   #footer h1 {
     width: max-content;
-    margin: auto;
+    margin: 0 auto;
     color: #3a3a3a;
     font-size: 30px; }
   #footer img#logo {

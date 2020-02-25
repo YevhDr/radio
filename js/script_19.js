@@ -18,7 +18,7 @@ const width = window.innerWidth * 0.8;
 var height;
 const padding = 10;
 const r = 6;
- if(window.innerWidth > 1200){ height  = window.innerHeight } else { height  = window.innerHeight * 1.3 }
+ if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.3 }
 
 
 var svg = d3.select("#chart").append("svg")
