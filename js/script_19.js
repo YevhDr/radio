@@ -68,18 +68,24 @@ var render = function(df){
 
         circles
             .enter()
-            .append("circle")
+            .append("path")
             .attr("class", "node");
 
         circles
             .attr("value", function(d) { return  d.style })
-            .attr("cx", function (d) { return d.x; })
             .attr("id", function (d) { return d.id; })
-            .attr("cy", function (d) { return d.y; })
-            .attr("r", r)
+            .attr('transform',function(d){ return "translate("+d.x+","+d.y+")"; })
+            .attr("transform", "rotate(-90)")
             .style("stroke-width", 5)
-            .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
-            .style("stroke", function(d) { return newFill(d.style); })
+            .style("fill", function(d) { return newFill(d.style); })
+            .attr('d',  function(d){
+                if(d.isaudio === "yes") {
+                    return "M0,-8 L10, 0 0,8Z";
+                }
+                else {
+                    return "M0, 5 A 5, 5 0 1, 1 0, -5 A 5, 5 0 1, 1 0, 5Z"
+                }
+                })
             .attr("data-tippy-content", function (d) {
                var linkColor = newFill(d.style);
                return "<div id='myTooltip>' >" +
@@ -97,43 +103,33 @@ var render = function(df){
                var currentClickedId = d3.select(this).attr("id");
                var currentClickedValue = d3.select(this).attr("value");
 
-               // d3.select(this).attr("r", 20);
-
                //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
                if(this.classList.contains('played')){
                    audio.pause();
-                   d3.select(this)
-                       .style("fill", function() { return  "url(#playimage-click)"})
-                       .attr("class", "node clicked paused");
+                   d3.select(this).attr("class", "node clicked paused");
                }
 
                //якщо цей кружечок вже клікнутий і натиснута пауза:
                else if(this.classList.contains('paused')) {
                    audio.play();
-                   d3.select(this)
-                       .style("fill",  function() { return "url(#pauseimage-click)"})
-                       .attr("class", "node clicked played");
+                   d3.select(this).attr("class", "node clicked played");
                }
 
                //якщо кружечок клікається вперше:
                else {
                    if (d.isaudio === "yes") {
+                       d3.selectAll(".node").attr('d',  function(d){
+                           if(d.isaudio === "yes") { return "M0,-8 L10, 0 0,8Z"; }
+                           else {
+                               return "M0, 5 A 5, 5 0 1, 1 0, -5 A 5, 5 0 1, 1 0, 5Z";
+                           }
+                       });
 
                        //прибираємо в усіх кружечков будь-які зайві класи
                        d3.selectAll(".node").attr("class", "node");
 
-                       //повертаємо усім кружечкам неактивну заливку, обводку і ширину обводки
-                       d3.selectAll(".node")
-                           .style("fill", function(p) { return p.isaudio === "yes" ? "white" : "#181818" })
-                           .attr("r", r);
-
                        //додаємо до обраного потрібні класи - "клікнутий та грає"
-                       d3.select(this).attr("class", "node clicked played");
-
-                       //міняємо фонову картинку кнопки
-                       d3.select(this)
-                           .style("fill", function() { return "url(#pauseimage-click)" })
-                           .style("stroke-width", '3px');
+                       d3.select(this).attr("class", "node clicked played").attr("d", "M0,-15 L25, 0 0,15Z");
 
                        $("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                        d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
@@ -169,41 +165,50 @@ var render = function(df){
                        //починаємо грати
                        $("audio").get(0).play();
                        $("#playing-album").attr("src", d.image);
-                       $("#playing-song").html("Ви слухаєте: <b>" + d.group + " - " + d.album + "</b> ");
+                       $("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ").css("color", newFill(d.style));
+                   }
+                   else if(d.year === "2019"){
+                       d3.select("#embed")
+                           .attr("src", d.listen)
                    }
                }
-           })
-           .on("mouseover", function (d) {
-               d3.selectAll(".node")
-                   .filter(function() {
-                       return !this.classList.contains('clicked')
-                   })
-                   .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
-                   .style("stroke-width", 5)
-                   .attr("r",  r);
-
-               //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
-               if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
-                   d3.select(this)
-                       .attr("r", r * 2.5)
-                       .style("fill", function() { return "url(#playimage-hover)" })
-                       .style("stroke-width", '3px');
-               }
-
-               $("li.list").css("text-decoration", "none");
-               var theStyle = d.style;
-               theStyle = capitalize(theStyle);
-               $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
-
-           })
-           .on("mouseout", function (d) {
-               /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
-               d3.selectAll(".node")
-                   .filter(function() { return !this.classList.contains('clicked') })
-                   .style("fill", function(p) { return p.isaudio === "yes"? "white": "#181818" })
-                   .style("stroke-width", 5)
-                   .attr("r", r)
            });
+           // .on("mouseover", function (d) {
+           //     d3.selectAll(".node")
+           //         .filter(function() {
+           //             return !this.classList.contains('clicked')
+           //         })
+           //         .style("fill", function(d) { return newFill(d.style); })
+           //         // .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
+           //         //
+           //         // .style("stroke-width", 5)
+           //         // .attr("r",  r)
+           //     ;
+           //
+           //     //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
+           //     if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
+           //         d3.select(this)
+           //             // .attr("r", r * 2.5)
+           //             .style("fill", function(d) { return newFill(d.style); })
+           //             // .style("fill", function() { return "url(#playimage-hover)" })
+           //             // .style("stroke-width", '3px');
+           //     }
+           //
+           //     $("li.list").css("text-decoration", "none");
+           //     var theStyle = d.style;
+           //     theStyle = capitalize(theStyle);
+           //     $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
+           //
+           // })
+           // .on("mouseout", function (d) {
+           //     /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
+           //     d3.selectAll(".node")
+           //         .filter(function() { return !this.classList.contains('clicked') })
+           //         .style("fill", function(d) { return newFill(d.style); })
+           //         // .style("fill", function(p) { return p.isaudio === "yes"? "white": "#181818" })
+           //         // .style("stroke-width", 5)
+           //         // .attr("r", r)
+           // });
 
        circles.exit().remove();
 
@@ -417,12 +422,10 @@ var renderMobile = function(df) {
             }
             d3.selectAll(".node")
                 .each(collide(0.5, df))
-                .attr("cx", function (d) {
-                    return d.x;
-                })
-                .attr("cy", function (d) {
-                    return d.y;
-                });
+                .attr('transform',function(d){ return "translate("+d.x+","+d.y+")"; });
+
+                // .attr("cx", function (d) { return d.x; })
+                // .attr("cy", function (d) { return d.y; });
         }
     }
 
@@ -440,12 +443,10 @@ var renderMobile = function(df) {
             }
             selection
                 .each(collide(0.5, df))
-                .attr("cx", function (tt) {
-                    return tt.x;
-                })
-                .attr("cy", function (tt) {
-                    return tt.y;
-                });
+                .attr('transform',function(tt){ return "translate("+tt.x+","+tt.y+")"; });
+
+                // .attr("cx", function (tt) { return tt.x; })
+                // .attr("cy", function (tt) { return tt.y; });
         }
     }
 
@@ -558,6 +559,19 @@ setTimeout(function () {
 function capitalize(s) {
     return s[0].toUpperCase() + s.slice(1);
 }
+
+
+d3.select("#stop-pause").on("click", function() {
+    if(this.classList.contains('play-image')){
+        d3.select(this).attr("class", "pause-image")
+        $("audio").get(0).play();
+    } else {
+        d3.select(this).attr("class", "play-image")
+        $("audio").get(0).pause();
+    }
+
+
+});
 
 
 

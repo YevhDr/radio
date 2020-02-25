@@ -229,13 +229,39 @@ g#styles {
   width: 30px; }
 
 #playing-now {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 50px;
   width: 80%;
   margin: 0 auto;
   text-align: center; }
+  @media (max-width: 800px) {
+    #playing-now {
+      display: grid;
+      grid-template-columns: 40px auto;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      margin: 0 auto 20px 25px;
+      text-transform: uppercase; } }
+  #playing-now .pause-image {
+    background-image: url(../img/pause.svg);
+    background-size: 95% 95%;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px; }
+  #playing-now .play-image {
+    background-image: url(../img/play.svg);
+    background-size: 95% 95%;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px; }
 
 #playing-song, #playing-song-mob {
-  font-size: 14px;
   -webkit-margin-before: 1em;
   -webkit-margin-after: 1em;
   color: #7b7b7b; }
@@ -317,5 +343,11 @@ g#styles {
     transform: translateY(-30px); }
   60% {
     transform: translateY(-15px); } }
+#embed {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  height: 200px; }
 
 /*# sourceMappingURL=styles.css.map */
