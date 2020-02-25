@@ -76,14 +76,14 @@ var render = function(df){
             .attr("id", function (d) { return d.id; })
             .attr('transform',function(d){ return "translate("+d.x+","+d.y+")"; })
             .attr("transform", "rotate(-90)")
-            .style("stroke-width", 5)
+            .style("stroke-width", 1)
             .style("fill", function(d) { return newFill(d.style); })
             .attr('d',  function(d){
-                if(d.isaudio === "yes") {
+                if(d.isaudio === "yes" || d.isaudio === "video") {
                     return "M0,-8 L10, 0 0,8Z";
                 }
                 else {
-                    return "M0, 5 A 5, 5 0 1, 1 0, -5 A 5, 5 0 1, 1 0, 5Z"
+                    return "M0, 6 A 6, 6 0 1, 1 0, -6 A 6, 6 0 1, 1 0, 6Z"
                 }
                 })
             .attr("data-tippy-content", function (d) {
@@ -100,115 +100,78 @@ var render = function(df){
                    "</div>"
            })
            .on("click", function (d) {
+               $("audio").get(0).pause();
                var currentClickedId = d3.select(this).attr("id");
                var currentClickedValue = d3.select(this).attr("value");
 
-               //якщо цей кружечок вже клікнутий, то нам потрібна пауза:
-               if(this.classList.contains('played')){
-                   audio.pause();
-                   d3.select(this).attr("class", "node clicked paused");
-               }
+               if (d.isaudio === "yes" || d.isaudio === "video") {
 
-               //якщо цей кружечок вже клікнутий і натиснута пауза:
-               else if(this.classList.contains('paused')) {
-                   audio.play();
-                   d3.select(this).attr("class", "node clicked played");
-               }
-
-               //якщо кружечок клікається вперше:
-               else {
-                   if (d.isaudio === "yes") {
-                       d3.selectAll(".node").attr('d',  function(d){
-                           if(d.isaudio === "yes") { return "M0,-8 L10, 0 0,8Z"; }
-                           else {
-                               return "M0, 5 A 5, 5 0 1, 1 0, -5 A 5, 5 0 1, 1 0, 5Z";
-                           }
-                       });
-
-                       //прибираємо в усіх кружечков будь-які зайві класи
-                       d3.selectAll(".node").attr("class", "node");
-
-                       //додаємо до обраного потрібні класи - "клікнутий та грає"
-                       d3.select(this).attr("class", "node clicked played").attr("d", "M0,-15 L25, 0 0,15Z");
-
-                       $("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
-                       d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
-                       d3.select(this).attr("r", r * 3 );  //збільшуємо радіус клікнутого
-
-
-                       //оця штука якось перемальовуэ колайд, щоб збільшений кружечок вміщався???
-                       var selectedCurrentNodes = d3.selectAll(".node[value = '" + currentClickedValue + "']"  );
-
-                       var selectedPreviousNodes = d3.selectAll(".node[value = '" + previousClickedValue + "']");
-                       for(var i = 0; i < selectedPreviousNodes.length; i++) {
-                           selectedCurrentNodes.push(selectedPreviousNodes[i])
+                   d3.selectAll(".node").attr('d',  function(d){
+                       if (d.isaudio === "yes" || d.isaudio === "video") {
+                           return "M0,-8 L10, 0 0,8Z";
                        }
-
-                      var activeLi = $("button.active").attr('id');
-
-                       var newD = dataUnique;
-
-                       for (var j = 0; j < newD.length; j++) {
-                           if(newD[j].id === currentClickedId) {
-                               newD[j].radius = r * 3;
-                           }
-                           else {
-                               newD[j].radius = r;
-                           }
+                       else {
+                           return "M0, 6 A 6, 6 0 1, 1 0, -6 A 6, 6 0 1, 1 0, 6Z";
                        }
+                   });
 
-                       var centers = getCenters(activeLi, [width, height], newD);
-                       force.on("tick", tickRedraw(selectedCurrentNodes, centers, activeLi, newD));
-                       force.start();
-                       previousClickedValue = currentClickedValue;
+                   //додаємо до обраного потрібні класи - "клікнутий та грає"
+                   d3.select(this).attr("d", "M0,-15 L25, 0 0,15Z");
 
-                       //починаємо грати
+                   //перемикач між ютьюб файфремом і аудіо
+                   if(d.year === "2019") {
+                       $("audio").get(0).pause();
+                       d3.select("#embed").attr("src", d.listen); //додаємо потрібне відео
+                   } else {
+                       d3.select("#embed").attr("src", "").style("display", "none");
+                       $("audio").attr("src", "sounds/" + d.audio); //додаємо потрібне аудіо
                        $("audio").get(0).play();
-                       $("#playing-album").attr("src", d.image);
-                       $("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ").css("color", newFill(d.style));
                    }
-                   else if(d.year === "2019"){
-                       d3.select("#embed")
-                           .attr("src", d.listen)
+
+                   //починаємо грати
+                   d3.select("#playing-album").attr("src", d.image);
+                   d3.select("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ").style("color", newFill(d.style));
+
+
+                   //**********************************************************************************************
+                   //оця штука якось перемальовуэ колайд, щоб збільшений кружечок вміщався???
+                   var selectedCurrentNodes = d3.selectAll(".node[value = '" + currentClickedValue + "']"  );
+
+                   var selectedPreviousNodes = d3.selectAll(".node[value = '" + previousClickedValue + "']");
+                   for(var i = 0; i < selectedPreviousNodes.length; i++) {
+                       selectedCurrentNodes.push(selectedPreviousNodes[i])
                    }
+
+                   var activeLi = $("button.active").attr('id');
+                   var newD = dataUnique;
+                   for (var j = 0; j < newD.length; j++) {
+                       if(newD[j].id === currentClickedId) {
+                           newD[j].radius = r * 3;
+                       }
+                       else {
+                           newD[j].radius = r;
+                       }
+                   }
+
+                   var centers = getCenters(activeLi, [width, height], newD);
+                   force.on("tick", tickRedraw(selectedCurrentNodes, centers, activeLi, newD));
+                   force.start();
+                   previousClickedValue = currentClickedValue;
                }
+
+           })
+           .on("mouseover", function (d) {
+               d3.selectAll(".node").style("fill", function(d) { return newFill(d.style); });
+               d3.select(this).style("fill", "white");
+
+               $("li.list").css("text-decoration", "none");
+               var theStyle = d.style;
+               theStyle = capitalize(theStyle);
+               $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
+           })
+           .on("mouseout", function (d) {
+               d3.selectAll(".node").style("fill", function(d) { return newFill(d.style); })
            });
-           // .on("mouseover", function (d) {
-           //     d3.selectAll(".node")
-           //         .filter(function() {
-           //             return !this.classList.contains('clicked')
-           //         })
-           //         .style("fill", function(d) { return newFill(d.style); })
-           //         // .style("fill",  function(p) { return p.isaudio === "yes"? "white": "#181818" })
-           //         //
-           //         // .style("stroke-width", 5)
-           //         // .attr("r",  r)
-           //     ;
-           //
-           //     //якщо це клікабельний кружечок, збільшуємо і додаємо кнопку play
-           //     if (d.isaudio === "yes" && !this.classList.contains('clicked')) {
-           //         d3.select(this)
-           //             // .attr("r", r * 2.5)
-           //             .style("fill", function(d) { return newFill(d.style); })
-           //             // .style("fill", function() { return "url(#playimage-hover)" })
-           //             // .style("stroke-width", '3px');
-           //     }
-           //
-           //     $("li.list").css("text-decoration", "none");
-           //     var theStyle = d.style;
-           //     theStyle = capitalize(theStyle);
-           //     $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
-           //
-           // })
-           // .on("mouseout", function (d) {
-           //     /*так само обираэмо усі, окрім клікнутого, і забираємо з них всі ховер ефекти*/
-           //     d3.selectAll(".node")
-           //         .filter(function() { return !this.classList.contains('clicked') })
-           //         .style("fill", function(d) { return newFill(d.style); })
-           //         // .style("fill", function(p) { return p.isaudio === "yes"? "white": "#181818" })
-           //         // .style("stroke-width", 5)
-           //         // .attr("r", r)
-           // });
 
        circles.exit().remove();
 
@@ -272,9 +235,11 @@ var renderMobile = function(df) {
         d3.selectAll(".select-year").on("click", function() {
             var selected_year = d3.select(this).text();
             if(selected_year === "2019") {
-               d3.select("#language").style("display", "none")
+               d3.select("#sex").style("display", "none");
+               d3.select("#embed").style("display", "block");
             } else {
-                d3.select("#language").style("display", "inline")
+                d3.select("#sex").style("display", "inline");
+                d3.select("#embed").style("display", "node");
             }
             var newData = input.filter(function (d) {
                 return d.year === selected_year
