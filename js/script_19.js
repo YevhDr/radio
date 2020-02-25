@@ -373,6 +373,7 @@ var renderMobile = function(df) {
             .on("click", function(d){
                 if(d.isaudio === "yes") {
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
+                    d3.select("audio > source").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
 
                     //починаємо грати
