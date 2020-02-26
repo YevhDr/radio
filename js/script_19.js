@@ -9,8 +9,8 @@ const audio = document.getElementById("audio");
 //сортуємо по заданим параметрам.... здається не працює
 const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
 const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-const regionOrder = ["", "інший", "Північ", "Південь", "Закордон", "Схід", "Захід", "Центр"];
-const languageOrder = ["", "дивна", "немає", "специфічна", "російська", "англійська", "українська"];
+const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
+const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
 
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
