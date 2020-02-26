@@ -7,7 +7,7 @@ const audio = document.getElementById("audio");
 
 //сортуємо по заданим параметрам.... здається не працює
 const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
-const aprizeOrder = ["усі альбоми EP", "Long List", "усі альбоми LP", "Short List"];
+const aprizeOrder = ["усі альбоми EP",  "усі альбоми LP", "Long List", "Short List"];
 const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
 const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
