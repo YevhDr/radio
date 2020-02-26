@@ -102,8 +102,8 @@ body {
 h1 {
   line-height: 1.3;
   width: max-content;
-  font-size: 40px;
-  margin: 0 10px; }
+  font-size: 35px;
+  margin: 0 20px; }
 
 p {
   font-size: 20px; }
@@ -117,7 +117,7 @@ a {
 
 /* кнопки - роки*/
 button.select-year {
-  font-size: 25px; }
+  font-size: 18px; }
 
 .active-year {
   background-color: rgba(225, 225, 225, 0.2);
@@ -200,13 +200,13 @@ button.active {
   display: none; }
 
 /* пошук */
-#filter {
+#search-artist {
   display: block;
   padding: 5px;
   width: max-content;
   margin: auto; }
   @media (max-width: 812px) {
-    #filter {
+    #search-artist {
       display: none; } }
 
 /* svg-контейнер */

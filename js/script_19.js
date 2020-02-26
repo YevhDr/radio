@@ -173,6 +173,7 @@ const render = function(df){
             animation: "fade",
             interactive: true,
             hideOnClick: true,
+            maxWidth: 200,
             theme: 'width-200',
             onShow(tip) {
                 tip.setContent(tip.reference.getAttribute('data-tippy-content'))
@@ -189,7 +190,7 @@ const render = function(df){
         });
 
     //Пошук по графіку
-    $("#filter").keyup(function () {
+    $("#search-artist").keyup(function () {
         var value = $(this).val();
 
         if (value) {
