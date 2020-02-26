@@ -96,14 +96,14 @@
 </div>
 
 <div id="graphics">
-
     <div id="titles_group"></div>
     <p style="margin:50px 10px auto 10px"><i>Перемикаючись між вкладками, можна побачити розподіл альбомів за стилем, статтю, мовою, регіоном, а також подивитись, які виконавці потрапили в довгий і короткий листи премії. Кожен маркер — один альбом. Наведіть на нього мишею, аби подивитись детальну інформацію. Клікайте на трикутнички, щоб прослухати.</i></p>
     <div class="text text-top">
     <h1>Українські альбоми</h1>
         <button id="y_2018" class="select-year">2018</button>
-        <button id="y_2019" class="select-year">2019</button>
+        <button id="y_2019" class="select-year active-year">2019</button>
     </div>
+
 
     <div style="position:relative;">
     <div id="toolbar">
@@ -116,8 +116,9 @@
 
         <div id="playing-now">
             <div id="stop-pause" class="pause-image"></div>
-            <p>Ви слухаєте: <span id="playing-song">не обрано</span></p>
+            <p style="font-size: 15px;">Ви слухаєте: <span id="playing-song">не обрано</span></p>
         </div>
+        <input id="filter" type="text" class="form-control" placeholder=" пошук по виконавцю"></p>
     </div>
 
 
@@ -129,7 +130,11 @@
     </audio>
 
 
-    <div id="chart"></div>
+    <div id="chart">
+        <div class="input-group">
+
+        </div>
+    </div>
     <div id="chart-mobile"></div>
 
     <div class="text text-bottom">
@@ -286,6 +291,7 @@
 
 <script src="lib/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.2/d3.min.js"></script>-->
 <!--<script src="lib/d3.__min.js"></script>-->
 <!--<script src="lib/d3-legend.__min.js"></script>-->
 <script src="https://unpkg.com/tippy.js@3/dist/tippy.all.min.js"></script>

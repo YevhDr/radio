@@ -164,8 +164,16 @@ button.active {
   border: 2px solid #e1e1e1;
   color: #e1e1e1; }
 
+#sex {
+  display: none; }
+
 button.select-year {
   font-size: 25px; }
+
+.active-year {
+  background-color: rgba(225, 225, 225, 0.2);
+  border: 2px solid #e1e1e1;
+  color: #e1e1e1; }
 
 #toolbar {
   z-index: 1;
@@ -179,10 +187,19 @@ button.select-year {
   justify-content: space-between; }
 
 #chart {
+  position: relative;
   width: 80%; }
   @media (max-width: 812px) {
     #chart {
       display: none; } }
+
+#stop-pause {
+  display: none; }
+
+#filter {
+  display: block;
+  width: max-content;
+  margin: auto; }
 
 #chart-mobile {
   display: none;
@@ -234,7 +251,6 @@ g#styles {
   width: 30px; }
 
 #playing-now {
-  font-size: 14px;
   display: flex;
   justify-content: center;
   align-items: center;

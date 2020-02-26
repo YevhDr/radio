@@ -8,7 +8,7 @@ const audio = document.getElementById("audio");
 
 //сортуємо по заданим параметрам.... здається не працює
 const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
-const aprizeOrder = ["усі альбоми EP", "усі альбоми LP", "Long List", "Short List"];
+const aprizeOrder = ["усі альбоми EP", "Long List", "усі альбоми LP", "Short List"];
 const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
 const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
@@ -19,7 +19,7 @@ const width = window.innerWidth * 0.8;
 var height;
 const padding = 10;
 const r = 6;
- if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.3 }
+ if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.5 }
 
 
 var svg = d3.select("#chart").append("svg")
@@ -31,7 +31,7 @@ var svg = d3.select("#chart").append("svg")
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var force = d3.layout.force();
+var force = d3.layout.force(); //***
 
 
 var render = function(df){
@@ -46,7 +46,7 @@ var render = function(df){
             return group.album;
         });
 
-        var newFill = d3.scale.ordinal()
+        var newFill = d3.scale.ordinal() //***
             .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
             .domain(d3.map(dataUnique, function(d){return d.style;}));
 
@@ -127,6 +127,7 @@ var render = function(df){
                        d3.select("#embed").attr("src", "").style("display", "none");
                        $("audio").attr("src", "sounds/" + d.audio); //додаємо потрібне аудіо
                        $("audio").get(0).play();
+                       $('#stop-pause').attr("class", "pause-image");
                    }
 
                    //починаємо грати
@@ -196,7 +197,42 @@ var render = function(df){
         });
 
 
-    };
+    //Пошук по графіку
+    $("#filter").keyup(function () {
+        var value = $(this).val();
+
+        if (value) {
+            var i = 0;
+            var re = new RegExp(value, "i");
+
+            dataUnique.forEach(function (d) {
+                console.log(d);
+                if (!d.group.match(re)) { // color gray if not a match
+                    d3.select(circles[0][i])
+                        .style("stroke", "none")
+                        .style("opacity", 1)
+                } else {
+                    d3.select(circles[0][i])
+                        .style("stroke", "white")
+                        .style("stroke-width", "3px")
+                        ;
+                }
+                i++;
+            });
+        } else {
+            d3.selectAll(".node")
+                .style("opacity", 1)
+                .style("stroke", "none");
+        }
+    }).keyup();
+
+
+
+
+
+
+
+};
 
 var renderMobile = function(df) {
     d3.select("#chart-mobile").html("");
@@ -226,7 +262,7 @@ var renderMobile = function(df) {
     d3.csv('data/random_18_19.csv', function (error, input) {
     
         var data = input.filter(function(d) {
-            return d.year === "2018"
+            return d.year === "2019"
         });
 
         render(data);
@@ -234,13 +270,17 @@ var renderMobile = function(df) {
     
     
         d3.selectAll(".select-year").on("click", function() {
+            d3.selectAll(".select-year").classed("active-year", false);
+            d3.select(this).classed("active-year", true);
             var selected_year = d3.select(this).text();
             if(selected_year === "2019") {
                d3.select("#sex").style("display", "none");
                d3.select("#embed").style("display", "block");
+               d3.select('#stop-pause').style("display", "none");
             } else {
                 d3.select("#sex").style("display", "inline");
                 d3.select("#embed").style("display", "node");
+                d3.select('#stop-pause').style("display", "block");
             }
             var newData = input.filter(function (d) {
                 return d.year === selected_year
@@ -275,7 +315,7 @@ var renderMobile = function(df) {
     /* віжмальовка мобільних списків */
 
     function draw_mobile(varname, df){
-        var newFill = d3.scale.ordinal()
+        var newFill = d3.scale.ordinal() //***
             .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
             .domain(d3.map(df, function(d){return d.style;}));
 
@@ -348,6 +388,7 @@ var renderMobile = function(df) {
                     d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
 
                     //починаємо грати
+
                     $("audio").get(0).play();
                     d3.select("#playing-album").attr("src", function(){ return d.image});
                     d3.select("#playing-song")
@@ -431,7 +472,7 @@ var renderMobile = function(df) {
     }
 
     function collide(alpha, df) {
-        var quadtree = d3.geom.quadtree(df);
+        var quadtree = d3.geom.quadtree(df); //***
         return function (d) {
             var r = d.radius + 20 + padding,
                 nx1 = d.x - r,
@@ -532,10 +573,10 @@ function capitalize(s) {
 
 d3.select("#stop-pause").on("click", function() {
     if(this.classList.contains('play-image')){
-        d3.select(this).attr("class", "pause-image")
+        d3.select(this).attr("class", "pause-image");
         $("audio").get(0).play();
     } else {
-        d3.select(this).attr("class", "play-image")
+        d3.select(this).attr("class", "play-image");
         $("audio").get(0).pause();
     }
 
