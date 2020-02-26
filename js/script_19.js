@@ -8,6 +8,7 @@ const audio = document.getElementById("audio");
 
 //сортуємо по заданим параметрам.... здається не працює
 const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
+const aprizeOrder = ["усі альбоми EP", "усі альбоми LP", "Long List", "Short List"];
 const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
 const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
 const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
@@ -488,14 +489,17 @@ var getCenters = function (vname, size, df) {
         if (sexOrder.includes(obj.name)) {
             return _.indexOf(sexOrder, obj.name);
         }
-        if (languageOrder.includes(obj.name)) {
+        else if (languageOrder.includes(obj.name)) {
             return _.indexOf(languageOrder, obj.name);
         }
-        if (regionOrder.includes(obj.name)) {
+        else if (regionOrder.includes(obj.name)) {
             return _.indexOf(regionOrder, obj.name);
         }
-        if (styleOrder.includes(obj.name)) {
+        else if (styleOrder.includes(obj.name)) {
             return _.indexOf(styleOrder, obj.name);
+        }
+        else if (aprizeOrder.includes(obj.name)) {
+            return _.indexOf(aprizeOrder, obj.name);
         }
 
     });

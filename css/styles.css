@@ -200,7 +200,8 @@ button.select-year {
       #chart-mobile div.cell {
         width: calc(100% - 30px); } }
   #chart-mobile .category_button {
-    width: max-content; }
+    width: max-content;
+    text-transform: uppercase; }
   #chart-mobile .album {
     transition: all 2s; }
   #chart-mobile .album > p {
