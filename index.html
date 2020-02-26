@@ -90,7 +90,7 @@
 <div id="graphics">
     <p style="padding: 10px"><i>Перемикаючись між вкладками, можна побачити розподіл альбомів за стилем, статтю, мовою, регіоном, а також подивитись, які виконавці потрапили в довгий і короткий листи премії. Кожен маркер — один альбом. Наведіть на нього мишею, аби подивитись детальну інформацію. </i></p>
 
-    <div class="text text-top">
+    <div class="chart-header">
         <h1>Українські альбоми</h1>
         <button id="y_2018" class="select-year">2018</button>
         <button id="y_2019" class="select-year active-year">2019</button>
@@ -108,7 +108,8 @@
     <!-- зараз грає -->
     <div id="playing-now">
         <div id="stop-pause" class="pause-image"></div>
-        <p style="font-size: 15px;">Ви слухаєте: <span id="playing-song">[ клікайте на трикутничики ]</span></p>
+        <p style="font-size: 15px;"><span id="playing-song">[ клікайте на трикутничики, щоб прослухати ]</span><br>
+        <a id="open_album_page" href="" target="_blank"></a></p>
     </div>
 
     <!-- пошук -->
@@ -263,7 +264,7 @@
     <p>Переможця буде оголошено на гала-вечорі премії 28 лютого.</p>
 </div>
 
-<iframe id="embed" allow="autoplay" style="position: fixed; bottom: 0; right: 0;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="200" height="200" type="text/html" src=""></iframe>
+<iframe id="embed" allow="autoplay" style="position: fixed; bottom: 0; right: 0;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="150" height="150" type="text/html" src=""></iframe>
 
 
 <div id="social-texty-links">

@@ -5,7 +5,6 @@
 $("a").attr("target", "_blank");
 const audio = document.getElementById("audio");
 
-
 //сортуємо по заданим параметрам.... здається не працює
 const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
 const aprizeOrder = ["усі альбоми EP", "Long List", "усі альбоми LP", "Short List"];
@@ -16,37 +15,33 @@ const languageOrder = ["", "кримськотатарська", "дивна", "
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
 const width = window.innerWidth * 0.8;
-var height;
+const height = window.innerWidth > 1200 ? window.innerHeight * 0.85:window.innerHeight * 1.5;
 const padding = 10;
-const r = 6;
- if(window.innerWidth > 1200){ height  = window.innerHeight * 0.85 } else { height  = window.innerHeight * 1.5 }
+const r = 6; //потрібен для вираховування коллайду
+const force = d3.layout.force();
 
-
-var svg = d3.select("#chart").append("svg")
+const svg = d3.select("#chart").append("svg")
    .attr("width", width)
-   .attr("height", height)
-    ;
+   .attr("height", height);
 
-
-var g = svg.append("g")
+const g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var force = d3.layout.force(); //***
 
 
-var render = function(df){
+const render = function(df){
     var currentData = df;
     for (var j = 0; j < currentData.length; j++) {
         currentData[j].radius = r;
         currentData[j].x = Math.random() * width;
-        currentData[j].y = Math.random() * height;
-       }
+        currentData[j].y = Math.random() * height; }
 
         var dataUnique = _.uniq(currentData, function (group) {
             return group.album;
         });
 
-        var newFill = d3.scale.ordinal() //***
+       //TODO уніфікувати кольори, коли будуть всі стилі (зараз воно залежить від даних)
+        var newFill = d3.scale.ordinal()
             .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
             .domain(d3.map(dataUnique, function(d){return d.style;}));
 
@@ -80,12 +75,12 @@ var render = function(df){
             .style("stroke-width", 1)
             .style("fill", function(d) { return newFill(d.style); })
             .attr('d',  function(d){
-                if(d.isaudio === "yes" || d.isaudio === "video") {
-                    return "M0,-8 L10, 0 0,8Z";
-                }
-                else {
-                    return "M0, 6 A 6, 6 0 1, 1 0, -6 A 6, 6 0 1, 1 0, 6Z"
-                }
+                    if(d.isaudio === "yes" || d.isaudio === "video") {
+                        return "M0,-8 L10, 0 0,8Z";
+                    }
+                    else {
+                        return "M0, 6 A 6, 6 0 1, 1 0, -6 A 6, 6 0 1, 1 0, 6Z"
+                    }
                 })
             .attr("data-tippy-content", function (d) {
                var linkColor = newFill(d.style);
@@ -105,8 +100,8 @@ var render = function(df){
                var currentClickedId = d3.select(this).attr("id");
                var currentClickedValue = d3.select(this).attr("value");
 
+               /* якщо клікнули на трикутник / прибираємо всі попередні зміни */
                if (d.isaudio === "yes" || d.isaudio === "video") {
-
                    d3.selectAll(".node").attr('d',  function(d){
                        if (d.isaudio === "yes" || d.isaudio === "video") {
                            return "M0,-8 L10, 0 0,8Z";
@@ -116,27 +111,27 @@ var render = function(df){
                        }
                    });
 
-                   //додаємо до обраного потрібні класи - "клікнутий та грає"
+                   /* збільшуємо клікнутий трикутник */
                    d3.select(this).attr("d", "M0,-15 L25, 0 0,15Z");
 
                    //перемикач між ютьюб файфремом і аудіо
                    if(d.year === "2019") {
                        $("audio").get(0).pause();
-                       d3.select("#embed").attr("src", d.listen); //додаємо потрібне відео
+                       d3.select("#embed").attr("src", d.listen); //якщо 2019 ставим відео, ховаємо плеєр
                    } else {
-                       d3.select("#embed").attr("src", "").style("display", "none");
+                       d3.select("#embed").attr("src", "").style("display", "none");  //якщо 2018 ставим відео, ховаємо плеєр
                        $("audio").attr("src", "sounds/" + d.audio); //додаємо потрібне аудіо
-                       $("audio").get(0).play();
-                       $('#stop-pause').attr("class", "pause-image");
+                       $('#stop-pause').attr("class", "pause-image"); //змінюємо іконку на паузу
+                       $("audio").get(0).play(); //включаємо
+                       $("#open_album_page").attr("href", d.listen);
                    }
 
-                   //починаємо грати
-                   d3.select("#playing-album").attr("src", d.image);
+                   /* показуємо, що ми граємо */
                    d3.select("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ").style("color", newFill(d.style));
 
 
                    //**********************************************************************************************
-                   //оця штука якось перемальовуэ колайд, щоб збільшений кружечок вміщався???
+                   //оця штука перемальовує колайд, щоб збільшений кружечок вміщався
                    var selectedCurrentNodes = d3.selectAll(".node[value = '" + currentClickedValue + "']"  );
 
                    var selectedPreviousNodes = d3.selectAll(".node[value = '" + previousClickedValue + "']");
@@ -165,11 +160,6 @@ var render = function(df){
            .on("mouseover", function (d) {
                d3.selectAll(".node").style("fill", function(d) { return newFill(d.style); });
                d3.select(this).style("fill", "white");
-
-               $("li.list").css("text-decoration", "none");
-               var theStyle = d.style;
-               theStyle = capitalize(theStyle);
-               $("li.list:contains(" + theStyle + ")").css("text-decoration", "underline");
            })
            .on("mouseout", function (d) {
                d3.selectAll(".node").style("fill", function(d) { return newFill(d.style); })
@@ -189,13 +179,14 @@ var render = function(df){
             }
        });
 
+       /* малюємо активну вкладу при переключенні між роками */
        var activeButton = $('.active').attr('id');
        draw(activeButton, dataUnique);
 
-        $("button").click(function () {
+       /* відмальовка по перемиканню між вкладками */
+       $("button").click(function () {
             draw(this.id, dataUnique);
         });
-
 
     //Пошук по графіку
     $("#filter").keyup(function () {
@@ -225,14 +216,9 @@ var render = function(df){
                 .style("stroke", "none");
         }
     }).keyup();
-
-
-
-
-
-
-
 };
+
+
 
 var renderMobile = function(df) {
     d3.select("#chart-mobile").html("");
@@ -243,24 +229,11 @@ var renderMobile = function(df) {
     d3.selectAll("#toolbar > button").on("click", function () {
         draw_mobile(this.id, df);
     });
-
-    tippy(".album", {
-        allowHTML: true,
-        animateFill: false,
-        animation: "fade",
-        interactive: true,
-        hideOnClick: true,
-        theme: 'width-200',
-        onShow(tip) {
-            tip.setContent(tip.reference.getAttribute('data-tippy-content'))
-        }
-    });
 };
 
 
 
-    d3.csv('data/random_18_19.csv', function (error, input) {
-    
+    d3.csv('data/random_18_19.csv', function (error, input) {    
         var data = input.filter(function(d) {
             return d.year === "2019"
         });
@@ -291,9 +264,6 @@ var renderMobile = function(df) {
         });
     });
 
-
-
-
     /* функція перемальовки при зміні вкладки*/
     function draw(varname, df) {
         var dataUnique = _.uniq(df, function (group) {
@@ -312,9 +282,10 @@ var renderMobile = function(df) {
         force.start();
     }
 
-    /* віжмальовка мобільних списків */
-
+    /* відмальовка мобільних списків */
     function draw_mobile(varname, df){
+        
+        //TODO уніфікувати кольори, коли будуть всі стилі
         var newFill = d3.scale.ordinal() //***
             .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
             .domain(d3.map(df, function(d){return d.style;}));
@@ -357,45 +328,34 @@ var renderMobile = function(df) {
             .enter()
             .append("div")
             .attr("class", function(d) { return "tip album hidden " + d.style })
-            .attr("data-tippy-content", function (d) {
-                var linkColor = newFill(d.style);
-                return "<div id='myTooltip>' >" +
-                    "<div id='album-picture'>" +
-                    "<img style='width: 100px;' src='" + d.image + "'/></div>" +
-                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
-                    "Альбом: <b>" + d.album + "</b><br>" +
-                    "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
-                    "Місто:  <b>" + d.City + "</b><br> " +
-                    "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
-                    "</div>" +
-                    "</div>";
-            })
             .style("display", "flex")
-            .style("color", function(d){
-                return newFill(d.style)
-            })
+            .style("color", function(d){ return newFill(d.style) })
             .html(function(d){
-                if(d.isaudio === "yes") {
+                if(d.isaudio === "yes" || d.isaudio === "video") {
                     return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
                 } else {
                     return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
                 }
             })
             .on("click", function(d){
+                $("#open_album_page").attr("href", d.listen).css("color", newFill(d.style)).html("[ Перейти до альбому ]");
+
                 if(d.isaudio === "yes") {
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("audio > source").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
 
                     //починаємо грати
-
                     $("audio").get(0).play();
                     d3.select("#playing-album").attr("src", function(){ return d.image});
-                    d3.select("#playing-song")
-                        .style("color", newFill(d.style))
-                        .html("Ви слухаєте: <b>" + d.group + " - " + d.album + "</b> ");
+                    d3.select("#playing-song").style("color", newFill(d.style)).html("<b>" + d.group + " - " + d.album + "</b> ");
                 }
-
+                if(d.isaudio === "video") {
+                    d3.select("#playing-song").html("<b>" + d.group + "</b> - " + d.album); //додаємо назву пісні поруч з
+                    d3.select("#embed").attr("src", d.listen); //додаємо потрібне відео
+                } else {
+                    d3.select("#playing-song").html("");
+                }
             });
 
         d3.selectAll(".category_button").on("click", function(d){
@@ -404,7 +364,6 @@ var renderMobile = function(df) {
                 d3.select(this).classed("hidden", d3.select(this).classed("hidden") ? false : true)
             })
         });
-
 
         d3.selectAll(".cell").each(function(){
             d3.select(this).selectAll(".album").sort(function(a, b){
@@ -512,6 +471,7 @@ $("#toolbar > button").on("click", function () {
 var getCenters = function (vname, size, df) {
     var centers, map;
 
+    /* спроба підвʼязати розмір кожного центру під кількість альбомів - некрасиво*/
    var counted_styles =  _.countBy(df, vname);
 
     centers = _.uniq(_.pluck(df, vname)).map(function (d, i) {
@@ -579,8 +539,6 @@ d3.select("#stop-pause").on("click", function() {
         d3.select(this).attr("class", "play-image");
         $("audio").get(0).pause();
     }
-
-
 });
 
 
