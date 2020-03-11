@@ -374,7 +374,6 @@ var renderMobile = function(df) {
         });
     }
 
-
     function tick(centers, varname, df) {
         var foci = {};
         for (var i = 0; i < centers.length; i++) {
