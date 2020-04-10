@@ -6,16 +6,19 @@ $("a").attr("target", "_blank");
 const audio = document.getElementById("audio");
 
 //сортуємо по заданим параметрам.... здається не працює
-const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
-const aprizeOrder = ["усі альбоми EP",  "усі альбоми LP", "Long List", "Short List"];
-const styleOrder = ["r&b and soul", "country", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock"];
-const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
-const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
+// const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
+// const aprizeOrder = ["усі альбоми EP",  "усі альбоми LP", "Long List", "Short List"];
+// const styleOrder = ["r&b and soul", "instrumental", "indie", "jazz", "ethno", "metal", "avant-garde", "pop", "hip hop & rap", "electronic", "rock", "country"];
+// const regionOrder = ["", "не визначено", "інший", "північ", "південь", "закордон", "схід", "захід", "центр"];
+// const languageOrder = ["", "кримськотатарська", "дивна", "немає", "специфічна",  "російська", "англійська", "українська"];
 
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
-const width = window.innerWidth * 0.8;
-const height = window.innerWidth > 1200 ? window.innerHeight * 0.85:window.innerHeight * 1.5;
+const width = window.innerWidth * 0.9;
+var height;
+
+height = window.innerHeight;
+
 const padding = 10;
 const r = 6; //потрібен для вираховування коллайду
 const force = d3.layout.force();
@@ -26,7 +29,6 @@ const svg = d3.select("#chart").append("svg")
 
 const g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
 
 const render = function(df){
@@ -40,23 +42,23 @@ const render = function(df){
             return group.album;
         });
 
-       //TODO уніфікувати кольори, коли будуть всі стилі (зараз воно залежить від даних)
         var newFill = d3.scale.ordinal()
-            .range(['#b20000', 'yellow', '#8c5754', '#c3c3c3', '#0977f6', '#fcc980', '#adeda6', '#db656b', '#4cb69c', '#d372d9', '#53a424', '#a26fdc'])
-            .domain(d3.map(dataUnique, function(d){return d.style;}));
+            .range(['#0b6ed7', 'yellow', '#8c5754', '#c3c3c3', 'yellow', '#fea34b', '#adeda6', '#921c92', '#43aa2b', 'brown', 'lightgrey', '#ff1182', '#13dcf1', "red"])
+            .domain(["electronic", "ethno / folk", "avant-garde", "country", "ethno", "hip hop & rap",  "indie", 'instrumental', 'jazz', 'metal', 'others', 'pop', 'r&b and soul', 'rock' ]);
 
-        /* легенда по стилях */
-        var styles = d3.map(dataUnique, function(d){return d.style;}).keys();
-        d3.select("#styleColorGuide")
-            .html("");
 
-        d3.select("#styleColorGuide")
-            .selectAll("li")
-            .data(styles)
-            .enter()
-            .append("li")
-            .text(function(d) { return d })
-            .style("color", function(d) { return newFill(d) });
+        // /* легенда по стилях */
+        // var styles = d3.map(dataUnique, function(d){return d.style;}).keys();
+        // d3.select("#styleColorGuide")
+        //     .html("");
+        //
+        // d3.select("#styleColorGuide")
+        //     .selectAll("li")
+        //     .data(styles)
+        //     .enter()
+        //     .append("li")
+        //     .text(function(d) { return d })
+        //     .style("color", function(d) { return newFill(d) });
 
         var previousClickedValue;
 
@@ -89,7 +91,7 @@ const render = function(df){
                    "<img style='width: 100px;' src='" + d.image + "'/></div>" +
                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>" +
-                   "Стиль: <b>" + d.Selfdetermination + "</b><br>" +
+                   "Стиль: <b>" + d.style + "</b><br>" +
                    "Місто:  <b>" + d.City + "</b><br> " +
                    "<a style='color:" + linkColor + "' href = '" + d.listen + "' target='_blank'>Перейти до альбому</a>" +
                    "</div>" +
@@ -234,7 +236,7 @@ var renderMobile = function(df) {
 
 
 
-    d3.csv('data/random_18_19.csv', function (error, input) {    
+    d3.csv('data/random_18_19_new.csv', function (error, input) {
         var data = input.filter(function(d) {
             return d.year === "2019"
         });
@@ -276,7 +278,7 @@ var renderMobile = function(df) {
         d3.selectAll(".node").each(function(k){
             d3.select(this).attr("value", k[varname])
         });
-        d3.select("#styleColorGuide").style("opacity", varname === "style"? 0 : 1);
+        // d3.select("#styleColorGuide").style("opacity", varname === "style"? 0 : 1);
         centers = getCenters(varname, [width, height], dataset);
         force.on("tick", tick(centers, varname, dataset));
         labels(centers);
@@ -486,24 +488,26 @@ var getCenters = function (vname, size, df) {
         centers.push(plusone)
     }
 
-    centers = _.sortBy(centers, function (obj) {
-        if (sexOrder.includes(obj.name)) {
-            return _.indexOf(sexOrder, obj.name);
-        }
-        else if (languageOrder.includes(obj.name)) {
-            return _.indexOf(languageOrder, obj.name);
-        }
-        else if (regionOrder.includes(obj.name)) {
-            return _.indexOf(regionOrder, obj.name);
-        }
-        else if (styleOrder.includes(obj.name)) {
-            return _.indexOf(styleOrder, obj.name);
-        }
-        else if (aprizeOrder.includes(obj.name)) {
-            return _.indexOf(aprizeOrder, obj.name);
-        }
+     centers = centers.reverse();
 
-    });
+    // centers = _.sortBy(centers, function (obj) {
+    //     if (sexOrder.includes(obj.name)) {
+    //         return _.indexOf(sexOrder, obj.name);
+    //     }
+    //     else if (languageOrder.includes(obj.name)) {
+    //         return _.indexOf(languageOrder, obj.name);
+    //     }
+    //     else if (regionOrder.includes(obj.name)) {
+    //         return _.indexOf(regionOrder, obj.name);
+    //     }
+    //     else if (styleOrder.includes(obj.name)) {
+    //         return _.indexOf(styleOrder, obj.name);
+    //     }
+    //     else if (aprizeOrder.includes(obj.name)) {
+    //         return _.indexOf(aprizeOrder, obj.name);
+    //     }
+    //
+    // });
 
     map = d3.layout.treemap().size(size).padding(50).ratio(1 / 1);
     map.nodes({children: centers});
@@ -522,7 +526,7 @@ setTimeout(function () {
         relativePos.bottom = childrenPos.bottom - parentPos.bottom,
         relativePos.left = childrenPos.left - parentPos.left;
 
-    $("#styleColorGuide ").css("top", relativePos.top + 20);
+    // $("#styleColorGuide ").css("top", relativePos.top + 20);
 }, 100);
 
 
