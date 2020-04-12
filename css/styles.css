@@ -357,5 +357,18 @@ button.active {
     transform: translateY(-30px); }
   60% {
     transform: translateY(-15px); } }
+.hidden {
+  display: none; }
+
+#show-last-year span {
+  color: #333;
+  cursor: pointer; }
+
+#show-last-year span:hover {
+  color: red;
+  border-bottom: 1px solid red; }
+
+path.node {
+  cursor: pointer; }
 
 /*# sourceMappingURL=styles.css.map */

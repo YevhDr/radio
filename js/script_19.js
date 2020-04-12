@@ -14,24 +14,35 @@ const audio = document.getElementById("audio");
 
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
-const width = window.innerWidth * 0.9;
-var height;
-
-height = window.innerHeight;
+var width = window.innerWidth * 0.9;
+var height = window.innerHeight;
 
 const padding = 10;
 const r = 6; //потрібен для вираховування коллайду
 const force = d3.layout.force();
 
-const svg = d3.select("#chart").append("svg")
-   .attr("width", width)
-   .attr("height", height);
+const svg = d3.select("#chart").append("svg");
 
-const g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var g = svg.append("g")
+    .attr("class", "g-wrapper");
+
 
 
 const render = function(df){
+
+    width = window.innerWidth * 0.9;
+    height = window.innerHeight;
+
+    svg.transition().duration(500)
+        .attr("width", width)
+        .attr("height", height);
+
+
+
+   g
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     var currentData = df;
     for (var j = 0; j < currentData.length; j++) {
         currentData[j].radius = r;
@@ -243,8 +254,8 @@ var renderMobile = function(df) {
 
         render(data);
         renderMobile(data);
-    
-    
+
+
         d3.selectAll(".select-year").on("click", function() {
             d3.selectAll(".select-year").classed("active-year", false);
             d3.select(this).classed("active-year", true);
@@ -261,10 +272,17 @@ var renderMobile = function(df) {
             var newData = input.filter(function (d) {
                 return d.year === selected_year
             });
-    
+
             render(newData);
             renderMobile(newData);
         });
+
+        window.addEventListener("resize", function() {
+            render(data);
+        } )
+
+
+
     });
 
     /* функція перемальовки при зміні вкладки*/
