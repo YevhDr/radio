@@ -60,7 +60,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #d1d1d1;
   color: #2a2a2a; }
 
 /* HEADER */
@@ -85,7 +84,7 @@ body {
 
 /* VISUALIZATION */
 #graphics {
-  color: #d1d1d1;
+  color: #dddddd;
   background-color: #2a2a2a;
   position: relative; }
 
@@ -221,7 +220,7 @@ button.active {
     font-family: 'Roboto', sans-serif;
     text-anchor: left;
     pointer-events: none;
-    fill: #d1d1d1;
+    fill: #dddddd;
     font-weight: bold; }
 
 /* МОБІЛЬНА ВЕСРІЯ */
@@ -361,14 +360,22 @@ button.active {
   display: none; }
 
 #show-last-year span {
-  color: #333;
   cursor: pointer; }
 
 #show-last-year span:hover {
   color: red;
-  border-bottom: 1px solid red; }
+  border-bottom: 2px dashed red; }
 
 path.node {
   cursor: pointer; }
+
+.color-link {
+  font-weight: bold;
+  color: black;
+  border-bottom: 2px dashed black; }
+
+.color-link:hover {
+  color: red;
+  border-bottom: 2px dashed red; }
 
 /*# sourceMappingURL=styles.css.map */
