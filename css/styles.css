@@ -211,7 +211,9 @@ button.active {
 /* svg-контейнер */
 #chart {
   position: relative;
-  width: 80%; }
+  width: 100%;
+  display: grid;
+  grid-template-columns: 80% 20%; }
   @media (max-width: 812px) {
     #chart {
       display: none; } }
@@ -254,15 +256,17 @@ button.active {
 
 /* tooltip */
 #styleColorGuide {
+  margin-top: 50px;
   pointer-events: none;
   opacity: 0;
+  font-weight: bold;
   position: absolute;
   right: 10%;
   list-style-type: none; }
   @media (max-width: 1000px) {
     #styleColorGuide {
       right: 5%; } }
-  @media (max-width: 700px) {
+  @media (max-width: 812px) {
     #styleColorGuide {
       display: none; } }
   #styleColorGuide li {

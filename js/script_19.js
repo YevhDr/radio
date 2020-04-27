@@ -14,14 +14,14 @@ const audio = document.getElementById("audio");
 
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
-var width = window.innerWidth * 0.9;
-var height = window.innerHeight;
+var width = window.innerWidth * 0.8;
+height = window.innerHeight * 1.3;
 
 const padding = 10;
 const r = 6; //потрібен для вираховування коллайду
 const force = d3.layout.force();
 
-const svg = d3.select("#chart").append("svg");
+const svg = d3.select("#chart").insert("svg", "ul");
 
 
 var g = svg.append("g")
@@ -31,17 +31,14 @@ var g = svg.append("g")
 
 const render = function(df){
 
-    width = window.innerWidth * 0.9;
-    height = window.innerHeight;
+    width = window.innerWidth * 0.8;
+    height = window.innerHeight * 1.3;
 
     svg.transition().duration(500)
         .attr("width", width)
         .attr("height", height);
 
-
-
-   g
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+   g.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var currentData = df;
     for (var j = 0; j < currentData.length; j++) {
@@ -58,18 +55,18 @@ const render = function(df){
             .domain(["electronic", "ethno / folk", "avant-garde", "country", "ethno", "hip hop & rap",  "indie", 'instrumental', 'jazz', 'metal', 'others', 'pop', 'r&b and soul', 'rock' ]);
 
 
-        // /* легенда по стилях */
-        // var styles = d3.map(dataUnique, function(d){return d.style;}).keys();
-        // d3.select("#styleColorGuide")
-        //     .html("");
-        //
-        // d3.select("#styleColorGuide")
-        //     .selectAll("li")
-        //     .data(styles)
-        //     .enter()
-        //     .append("li")
-        //     .text(function(d) { return d })
-        //     .style("color", function(d) { return newFill(d) });
+        /* легенда по стилях */
+        var styles = d3.map(dataUnique, function(d){return d.style;}).keys();
+        d3.select("#styleColorGuide")
+            .html("");
+
+        d3.select("#styleColorGuide")
+            .selectAll("li")
+            .data(styles)
+            .enter()
+            .append("li")
+            .text(function(d) { return d })
+            .style("color", function(d) { return newFill(d) });
 
         var previousClickedValue;
 
@@ -99,7 +96,7 @@ const render = function(df){
                var linkColor = newFill(d.style);
                return "<div id='myTooltip>' >" +
                    "<div id='album-picture'>" +
-                   "<img style='width: 100px;' src='" + d.image + "'/></div>" +
+                   "<img style='width: 100px;' src='" + d.used_link_newname + "'/></div>" +
                    "<div id='tooltipText'>" + "Назва: <b>" + d.group + "</b><br>" +
                    "Альбом: <b>" + d.album + "</b><br>" +
                    "Стиль: <b>" + d.style + "</b><br>" +
@@ -247,7 +244,7 @@ var renderMobile = function(df) {
 
 
 
-    d3.csv('data/random_18_19_new.csv', function (error, input) {
+    d3.csv('data/random_18_19_autoload.csv', function (error, input) {
         var data = input.filter(function(d) {
             return d.year === "2019"
         });
@@ -368,7 +365,7 @@ var renderMobile = function(df) {
 
                     //починаємо грати
                     $("audio").get(0).play();
-                    d3.select("#playing-album").attr("src", function(){ return d.image});
+                    d3.select("#playing-album").attr("src", function(){ return d.used_link_newname});
                     d3.select("#playing-song").style("color", newFill(d.style)).html("<b>" + d.group + " - " + d.album + "</b> ");
                 }
                 if(d.isaudio === "video") {
@@ -495,7 +492,7 @@ var getCenters = function (vname, size, df) {
    var counted_styles =  _.countBy(df, vname);
 
     centers = _.uniq(_.pluck(df, vname)).map(function (d, i) {
-        //return { name: d, value: counted_styles[d] };
+        // return { name: d, value: counted_styles[d] };
         return { name: d, value: 1 };
     });
 
@@ -507,6 +504,7 @@ var getCenters = function (vname, size, df) {
     }
 
      centers = centers.reverse();
+     console.log(centers.length);
 
     // centers = _.sortBy(centers, function (obj) {
     //     if (sexOrder.includes(obj.name)) {
