@@ -363,19 +363,20 @@ var renderMobile = function(df) {
                 }
             })
             .on("click", function(d){
+
                 $("#open_album_page").attr("href", d.listen).css("color", newFill(d.style)).html("[ Перейти до альбому ]");
 
                 if(d.isaudio === "yes") {
+                    console.log(d.album);
+                    d3.selectAll("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ");
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("audio > source").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
-                    d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
+                    // d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
 
                     //починаємо грати
                     $("audio").get(0).play();
-                    d3.select("#playing-album").attr("src", function(){ return d.used_link_newname});
-                    d3.select("#playing-song").style("color", newFill(d.style)).html("<b>" + d.group + " - " + d.album + "</b> ");
-                }
-                if(d.isaudio === "video") {
+
+                } else if(d.isaudio === "video") {
                     d3.select("#playing-song").html("<b>" + d.group + "</b> - " + d.album); //додаємо назву пісні поруч з
                     d3.select("#embed").attr("src", d.listen); //додаємо потрібне відео
                 } else {
