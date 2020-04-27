@@ -15,7 +15,7 @@ const audio = document.getElementById("audio");
 
 const margin = {top: 0, right: 50, bottom: 50, left: 50};
 var width = window.innerWidth * 0.8;
-height = window.innerHeight * 1.3;
+var height = window.innerHeight * 1.3;
 
 const padding = 10;
 const r = 6; //потрібен для вираховування коллайду
@@ -192,11 +192,18 @@ const render = function(df){
 
        /* малюємо активну вкладу при переключенні між роками */
        var activeButton = $('.active').attr('id');
+
        draw(activeButton, dataUnique);
 
        /* відмальовка по перемиканню між вкладками */
        $("button").click(function () {
-            draw(this.id, dataUnique);
+           draw(this.id, dataUnique);
+           if(this.id !="style"){
+               d3.select("#styleColorGuide").style("opacity", 1)
+           } else {
+               d3.select("#styleColorGuide").style("opacity", 0)
+           }
+
         });
 
     //Пошук по графіку
