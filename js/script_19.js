@@ -196,13 +196,13 @@ const render = function(df){
        draw(activeButton, dataUnique);
 
        /* відмальовка по перемиканню між вкладками */
-       $("button").click(function () {
-           draw(this.id, dataUnique);
+       $("button.button").click(function () {
            if(this.id !="style"){
                d3.select("#styleColorGuide").style("opacity", 1)
            } else {
                d3.select("#styleColorGuide").style("opacity", 0)
            }
+           draw(this.id, dataUnique);
 
         });
 
@@ -367,7 +367,6 @@ var renderMobile = function(df) {
                 $("#open_album_page").attr("href", d.listen).css("color", newFill(d.style)).html("[ Перейти до альбому ]");
 
                 if(d.isaudio === "yes") {
-                    console.log(d.album);
                     d3.selectAll("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ");
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("audio > source").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
@@ -512,7 +511,6 @@ var getCenters = function (vname, size, df) {
     }
 
      centers = centers.reverse();
-     console.log(centers.length);
 
     // centers = _.sortBy(centers, function (obj) {
     //     if (sexOrder.includes(obj.name)) {
