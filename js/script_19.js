@@ -134,6 +134,8 @@ const render = function(df){
                        $('#stop-pause').attr("class", "pause-image"); //змінюємо іконку на паузу
                        $("audio").get(0).play(); //включаємо
                        $("#open_album_page").attr("href", d.listen);
+                       $("#stop-pause").css("opacity", "1");
+
                    }
 
                    /* показуємо, що ми граємо */
@@ -355,19 +357,24 @@ var renderMobile = function(df) {
             .attr("class", function(d) { return "tip album hidden " + d.style })
             .style("display", "flex")
             .style("color", function(d){ return newFill(d.style) })
-            .html(function(d){
-                if(d.isaudio === "yes" || d.isaudio === "video") {
-                    return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
+            .html(function(d) {
+                if (d.year === "2019") {
+                    if (d.isaudio === "yes" || d.isaudio === "video") {
+                        return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
+                    } else {
+                        return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
+                    }
                 } else {
+                    $("#stop-pause").css("opacity", "0");
                     return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
                 }
             })
             .on("click", function(d){
 
+                d3.selectAll("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ");
                 $("#open_album_page").attr("href", d.listen).css("color", newFill(d.style)).html("[ Перейти до альбому ]");
 
                 if(d.isaudio === "yes") {
-                    d3.selectAll("#playing-song").html("<b>" + d.group + " - " + d.album + "</b> ");
                     d3.select("audio").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     d3.select("audio > source").attr("src", function () { return "sounds/" + d.audio }); //додаємо потрібне аудіо
                     // d3.select("#playing-song").html("<b>" + d.group + "</b> " + d.album); //додаємо назву пісні поруч з кліком
@@ -378,8 +385,6 @@ var renderMobile = function(df) {
                 } else if(d.isaudio === "video") {
                     d3.select("#playing-song").html("<b>" + d.group + "</b> - " + d.album); //додаємо назву пісні поруч з
                     d3.select("#embed").attr("src", d.listen); //додаємо потрібне відео
-                } else {
-                    d3.select("#playing-song").html("");
                 }
             });
 
