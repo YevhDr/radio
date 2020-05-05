@@ -4,6 +4,7 @@
 
 $("a").attr("target", "_blank");
 const audio = document.getElementById("audio");
+var selected_year = "2019";
 
 //сортуємо по заданим параметрам.... здається не працює
 // const sexOrder = ["інша", "жіноча", "мікс", "чоловіча"];
@@ -194,17 +195,26 @@ const render = function(df){
 
        /* малюємо активну вкладу при переключенні між роками */
        var activeButton = $('.active').attr('id');
+       if (activeButton === "sex" && selected_year === "2019") {
+           draw("style", dataUnique);
+       } else {
+           draw(activeButton, dataUnique);
+       }
 
-       draw(activeButton, dataUnique);
 
        /* відмальовка по перемиканню між вкладками */
        $("button.button").click(function () {
+           console.log(this.id);
+           console.log(selected_year);
            if(this.id !="style"){
                d3.select("#styleColorGuide").style("opacity", 1)
            } else {
                d3.select("#styleColorGuide").style("opacity", 0)
+
            }
+
            draw(this.id, dataUnique);
+
 
         });
 
@@ -265,7 +275,7 @@ var renderMobile = function(df) {
         d3.selectAll(".select-year").on("click", function() {
             d3.selectAll(".select-year").classed("active-year", false);
             d3.select(this).classed("active-year", true);
-            var selected_year = d3.select(this).text();
+            selected_year = d3.select(this).text();
             if(selected_year === "2019") {
                d3.select("#sex").style("display", "none");
                d3.select("#embed").style("display", "block");
@@ -285,7 +295,7 @@ var renderMobile = function(df) {
 
         window.addEventListener("resize", function() {
             render(data);
-        } )
+        })
 
 
 
@@ -358,16 +368,12 @@ var renderMobile = function(df) {
             .style("display", "flex")
             .style("color", function(d){ return newFill(d.style) })
             .html(function(d) {
-                if (d.year === "2019") {
-                    if (d.isaudio === "yes" || d.isaudio === "video") {
-                        return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
-                    } else {
-                        return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
-                    }
+                if (d.isaudio === "yes" || d.isaudio === "video") {
+                    return "<img style='width: 20px; margin-right: 5px' src='img/play.svg'/><p style='pointer-events: none'>" + d.group + " - " + d.album + "</p> "
                 } else {
-                    $("#stop-pause").css("opacity", "0");
                     return "<p style='margin-left: 25px'>" + d.group + " - " + d.album + "</p>"
                 }
+
             })
             .on("click", function(d){
 
