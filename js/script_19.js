@@ -398,7 +398,10 @@ var renderMobile = function(df) {
             var selected = d3.select(this.parentNode).selectAll(".album");
             selected.each(function(){
                 d3.select(this).classed("hidden", d3.select(this).classed("hidden") ? false : true)
-            })
+            });
+            let container = $(this).offset().top - $("#chart-mobile").offset().top;
+            console.log(container);
+            $('#chart-mobile').scrollTop(container + 50);
         });
 
         d3.selectAll(".cell").each(function(){
